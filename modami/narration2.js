@@ -116,7 +116,7 @@ setTimeout(() => {
     // TTS API 호출 함수 (getTtsAudio)
     // ==========================================================
     async function getTtsAudio(textScript) {
-        const apiKey = "여기에 내 코드 있음";
+        const apiKey = "AIzaSyBKLaoIvgJ-ch0wZSPIxm5HhqJLvGRIbNM";
         const apiUrl = `https://texttospeech.googleapis.com/v1beta1/text:synthesize?key=${apiKey}`;
         const payload = {
             input: { text: textScript },

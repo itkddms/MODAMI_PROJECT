@@ -1,9 +1,13 @@
-// ✅ 공통 상수
-const API_BASE = "https://modami-server.onrender.com";
 
 
 
-const OPENAI_API_KEY = ""; // ⚠️ 테스트용만, 배포금지
+
+
+
+
+
+
+const OPENAI_API_KEY = "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"; // ⚠️ 테스트용만, 배포금지
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ✅ URL 파라미터 감지만 사용 (localStorage는 무시)
@@ -96,11 +100,18 @@ ${transcript}`,
     },
   ];
 
-  const res = // 수정
-  await fetch(`${API_BASE}/api/gpt`, {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: prompt })
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages,
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+    }),
   });
 
   const data = await res.json();

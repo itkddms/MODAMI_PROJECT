@@ -1,11 +1,7 @@
-// ✅ 공통 상수
-const API_BASE = "https://modami-server.onrender.com";
-
-
 /*******************************************************
  * autobiography.js — 문자 단위 overflow 감지 (완전 교정 버전)
  *******************************************************/
-const OPENAI_API_KEY = window.OPENAI_API_KEY || "sk";
+const OPENAI_API_KEY = window.OPENAI_API_KEY || "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";
 const model = "gpt-4o-mini";
 
 // ✅ 모담이 인터뷰 데이터 로드 테스트
@@ -104,13 +100,22 @@ ${contentSummary}
 `;
 
   try {
-  // 🔹 아래로 교체
-const res = await fetch(`${API_BASE}/api/gpt`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ query: prompt }) // ✅ prompt만 보내면 서버가 알아서 GPT 호출
-  });
-
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: "system", content: "너는 따뜻한 감성으로 사람의 삶을 이야기처럼 풀어주는 작가야." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.7
+      })
+    });
 
     const data = await res.json();
     const json = JSON.parse(data.choices?.[0]?.message?.content || "{}");
