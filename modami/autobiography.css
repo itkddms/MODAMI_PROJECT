@@ -80,7 +80,7 @@ html, body{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 90px;
+    padding: 0 300px;
     z-index: 10;
 }
 
@@ -262,6 +262,8 @@ html, body{
 
 
 .spread-wrapper {
+  width: 100%;
+  padding: 0 90px;
   display: flex;
   justify-content: center;
   align-items: flex-start;

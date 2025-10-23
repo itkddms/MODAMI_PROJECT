@@ -101,7 +101,7 @@ header {
     position: relative; /* 로고의 absolute 위치 기준점! */
     display: flex;
     align-items: center;
-    padding: 0 90px;
+    padding: 0 160px;
     justify-content: space-between; /* 왼쪽과 오른쪽 요소를 양 끝으로 보냄 */
     box-sizing: border-box;
 }
@@ -165,7 +165,7 @@ header {
 .main_area {
     /* width: 1200px; */
     margin: 16px auto 0;
-    padding: 80px 90px; /* <- 상하 80px, 좌우 90px로 변경 */
+    padding: 80px 160px; /* <- 상하 80px, 좌우 90px로 변경 */
     /* ... */
     background-color: transparent; 
     border-radius: 20px;
