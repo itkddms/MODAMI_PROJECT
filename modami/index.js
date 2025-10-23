@@ -56,7 +56,7 @@ function resetModamiData() {
   });
 
   alert("모든 데이터가 초기화되었습니다. (API 키 포함)");
-  window.location.href = "index2.html"; // 첫 화면으로 이동
+  window.location.href = "index.html"; // 첫 화면으로 이동
 }
 
 /******************************************************
