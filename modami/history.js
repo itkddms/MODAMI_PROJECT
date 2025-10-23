@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
   // 🔑 시기별 데이터
   const stagesByPeriod = {
-    "CHILD": { text: "BGM - 가거라 삼팔선 (1948) / 남인수", audioSrc: "/sound/1940.mp3", backgroundClass: "history_child_bg" },
-    "TEEN": { text: "BGM - 굳세어라 금순아 (1953) / 현인", audioSrc: "/sound/1950.mp4", backgroundClass: "history_teen_bg" },
-    "ADULT": { text: "BGM - 노란 샤쓰의 사나이 (1961) / 한명숙", audioSrc: "/sound/1960.mp4", backgroundClass: "history_adult_bg" },
-    "MIDDLE": { text: "BGM - 서울 서울 서울 (1988) / 조용필", audioSrc: "/sound/1988.mp3", backgroundClass: "history_middle_bg" },
-    "SENIOR": { text: "BGM - 바람의 노래 (2002) / 조용필", audioSrc: "/sound/2002.mp3", backgroundClass: "history_senior_bg" }
+    "CHILD": { text: "BGM - 노란 샤쓰의 사나이 (1961) / 한명숙", audioSrc: "sound/1961.mp3", backgroundClass: "history_child_bg" },
+    "TEEN": { text: "BGM - 아침이슬 (1971) / 양희은", audioSrc: "sound/1971.mp3", backgroundClass: "history_teen_bg" },
+    "ADULT": { text: "BGM - 가로수 그늘 아래 서면 (1988) / 이문세", audioSrc: "sound/1988.mp3", backgroundClass: "history_adult_bg" },
+    "MIDDLE": { text: "BGM - 거짓말 (2000) / GOD", audioSrc: "sound/2000.mp3", backgroundClass: "history_middle_bg" },
+    "SENIOR": { text: "BGM - 테스형! (2020) / 나훈아", audioSrc: "sound/2020.mp3", backgroundClass: "history_senior_bg" }
   };
 
   // 🔑 narration에서 넘어올 때 ?group=childteen&returnStep=1

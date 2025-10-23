@@ -1,9 +1,19 @@
 /*******************************************************
  * autobiography.js — 문자 단위 overflow 감지 (완전 교정 버전)
  *******************************************************/
-const OPENAI_API_KEY = window.OPENAI_API_KEY || "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";
-const model = "gpt-4o-mini";
+// ✅ 수정
+let OPENAI_API_KEY = "";
 
+document.addEventListener("DOMContentLoaded", async () => {
+  // ✅ 모달에서 입력한 키 불러오기
+  OPENAI_API_KEY = localStorage.getItem("GPT_KEY") || "";
+
+  if (!OPENAI_API_KEY) {
+    alert("⚠️ OpenAI API 키가 설정되어 있지 않습니다. 첫 화면에서 입력해주세요.");
+    // 모달 페이지로 리다이렉트하거나 안내 메시지 띄워도 됨
+    return;
+  }
+});
 // ✅ 모담이 인터뷰 데이터 로드 테스트
 (function testLoadInterviews() {
   const stageMap = {
@@ -26,6 +36,8 @@ const model = "gpt-4o-mini";
     for (const key of keys) {
       try {
         const item = JSON.parse(localStorage.getItem(key));
+
+        if (item && item.content && item.title && !item.title.includes("사전인터뷰")) {
         console.log({
           key,
           stage: stageName,
@@ -37,6 +49,7 @@ const model = "gpt-4o-mini";
           title: item?.title,
           answer: item?.content
         });
+       }
       } catch (e) {
         console.warn(`⚠️ ${key} 파싱 실패:`, e);
       }
@@ -75,31 +88,46 @@ async function generateAutobiographyFromInterviews() {
     .map(it => `🔹 [${it.stage}] ${it.question}\n${it.answer}\n`)
     .join("\n\n");
 
-  const prompt = `
-너는 감성적이고 따뜻한 한국어 문체로 글을 쓰는 작가야.  
-아래는 사용자가 생애 각 시기별로 직접 말한 인터뷰 내용이야.  
-이 내용을 바탕으로 자서전 한 권에 들어갈 문장을 작성해줘.  
+const prompt = `
+너는 사용자의 인터뷰 답변을 바탕으로 감동적인 자서전을 집필하는 전문 작가야.
 
-규칙:
-- 시기별로 연결감 있게 구성하되, 실제 화자의 말투를 최대한 보존해줘.
-- 각 시기마다 10문장 정도로 구성해.
-- 존댓말이 아닌, 회상체 중심의 서술로 써줘.
-- JSON 형태로 시기별 나눠서 반환해.
+[작업 지시]
+아래 [인터뷰 데이터]를 읽고, 각 질문(question)에 대한 답변(answer)을 **1인칭 회고체(자서전 문체)**로 재작성해줘.
 
-출력 형식:
+1.  **내용 확장:** 답변(answer)은 단순한 구어체 녹취록이야. 이 답변의 **핵심 사실은 유지**하되, **그때의 감정이나 상황을 묘사하며 살을 붙여 내용을 풍성하게 늘려줘.**
+2.  **문체 변환:** 구어체("...했어요")를 문어체("...했다.")나 회고체("...했던 기억이 난다.")로 자연스럽게 윤문해줘.
+3.  **제목 유지:** 각 항목의 **질문 제목(title)은 절대 변경하지 말고** 그대로 사용해줘.
+4.  **뚱딴지같은 내용 금지:** 없는 사실을 지어내지 말고, 오직 답변 내용에 근거해서만 내용을 확장해야 해.
+
+[출력 형식]
+출력은 반드시 JSON 형태로 반환하되, 아래 예시 구조를 따라야 해.
+(예시의 title과 content는 실제 데이터를 사용하지 말고, 이 구조만 참고해.)
+
 {
   "sections": [
-    { "stage": "유아기", "title": "어린 시절의 기억", "content": "..." },
-    { "stage": "청소년기", "title": "청춘의 한 페이지", "content": "..." },
-    ...
+    {
+      "stage": "유아기",
+      "entries": [
+        { "title": "당시의 질문 제목 1", "content": "(GPT가 내용을 확장하고 다듬은 자서전 본문)" },
+        { "title": "당시의 질문 제목 2", "content": "(GPT가 내용을 확장하고 다듬은 자서전 본문)" }
+      ]
+    },
+    {
+      "stage": "청소년기",
+      "entries": [
+        { "title": "당시의 질문 제목 3", "content": "(GPT가 내용을 확장하고 다듬은 자서전 본문)" }
+      ]
+    }
   ]
 }
 
-인터뷰 기록:
+[인터뷰 데이터]
 ${contentSummary}
 `;
 
+
   try {
+    showSpinner(); // ✅ 로딩 시작
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -107,7 +135,7 @@ ${contentSummary}
         "Authorization": `Bearer ${OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: model,
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: "너는 따뜻한 감성으로 사람의 삶을 이야기처럼 풀어주는 작가야." },
           { role: "user", content: prompt }
@@ -118,16 +146,27 @@ ${contentSummary}
     });
 
     const data = await res.json();
+    hideSpinner(); // ✅ 로딩 완료
+
     const json = JSON.parse(data.choices?.[0]?.message?.content || "{}");
     const sections = json.sections || [];
 
-    console.log("📚 GPT 자서전 생성 완료:", sections);
-    return sections.map(s => ({
-      stage: s.stage,
-      question: s.title || `${s.stage}의 이야기`,
-      answer: s.content
-    }));
+    const merged = [];
+    sections.forEach(sec => {
+      sec.entries?.forEach(entry => {
+        merged.push({
+          stage: sec.stage,
+          question: entry.title,  // 질문 그대로 제목으로 사용
+          answer: entry.content
+        });
+      });
+    });
+
+    console.log("📚 GPT 자서전 생성 완료 (질문 단위):", merged);
+    return merged;
+
   } catch (e) {
+    hideSpinner(); // ✅ 에러 시에도 로딩 닫기
     console.error("❌ 자서전 생성 오류:", e);
     return [];
   }
@@ -138,6 +177,19 @@ ${contentSummary}
  *실행
  ********************************************/
 window.addEventListener("DOMContentLoaded", async () => {
+    // ✅ 자서전 제목 불러오기
+  const titleEl = document.getElementById("autobio-title");
+  const dateEl = document.getElementById("autobio-date");
+
+  const savedTitle = localStorage.getItem("autobiographyTitle") || "나의 특별한 이야기";
+  titleEl.textContent = savedTitle;
+
+  // ✅ 오늘 날짜 자동 표시 (YYYY. MM. DD 형식)
+  const today = new Date();
+  const formattedDate = `${today.getFullYear()}. ${String(today.getMonth() + 1).padStart(2, "0")}. ${String(today.getDate()).padStart(2, "0")}`;
+  dateEl.textContent = formattedDate;
+  
+  
   // 1️⃣ GPT를 통해 자서전 원문 생성
   const interviewData = await generateAutobiographyFromInterviews();
 
@@ -180,7 +232,7 @@ function loadInterviewData() {
     for (const key of keys) {
       try {
         const item = JSON.parse(localStorage.getItem(key));
-        if (item && item.content && item.title) {
+        if (item && item.content && item.title && item.title.endsWith('?')) {
           questions.push({
             stage: stageName,
             question: item.title,  // 사전 인터뷰 질문 제목
@@ -356,10 +408,3 @@ document.getElementById("btn-page-back").addEventListener("click", () => {
   }
 });
 
-/********************************************
- * 초기 실행
- ********************************************/
-// window.addEventListener("DOMContentLoaded", () => {
-//   spreadData = buildPagedSpreads(demoQuestions);
-//   renderSpread();
-// });

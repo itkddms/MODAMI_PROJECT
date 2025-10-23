@@ -9,6 +9,40 @@
 </head>
 
 <body>
+    <!-- 🔐 API 키 입력 모달 -->
+<div id="apiKeyModal" style="
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center;
+  z-index: 9999;
+">
+<div style="background: white; padding: 30px; border-radius: 16px; width: 340px; text-align: center; position: relative;">
+    <h2 style="margin-bottom: 15px;">API 키 입력</h2>
+    <button id="closeModalBtn" style="
+  position: absolute;top: 12px;right: 16px;background: none;border: none;
+  font-size: 22px;color: #666;cursor: pointer;line-height: 1;
+">×</button>
+    <p style="font-size:14px; color:#444;">GPT와 TTS 기능 사용을 위해<br>API 키를 입력해 주세요.</p>
+
+    <!-- (sk-로 시작) -->
+    <input id="gptKeyInput" type="password" placeholder="OpenAI GPT 키" 
+      style="width:100%; padding:10px; margin:15px 0; border-radius:8px; border:1px solid #ccc;" />
+ <!-- (AIza-로 시작) -->
+
+    <input id="ttsKeyInput" type="password" placeholder="Google TTS 키"
+      style="width:100%; padding:10px; margin:0 0 15px 0; border-radius:8px; border:1px solid #ccc;" />
+
+    <button id="saveKeysBtn"
+      style="padding:10px 20px; background:#6ABEFE; color:white; border:none; border-radius:8px; cursor:pointer;">
+      저장
+    </button>
+
+    <!-- <p style="font-size:12px; color:#666; margin-top:10px;">
+      ⚠️ 키는 브라우저(localStorage)에만 저장되며<br>서버로 전송되지 않습니다.
+    </p> -->
+  </div>
+</div>
+
+<script src="key.js"></script>
 
     <div class="index">
         <header>
@@ -16,22 +50,25 @@
                 <div class="nav_left">
                     <a href="index2.html" class="active">기록하기</a>
                     <a href="my_story.html">내 이야기</a>
-                    <button id="btn-reset" class="reset-btn">새로 시작하기</button>
+                    <!-- <button id="btn-reset" class="reset-btn">새로 시작하기</button>
+                    <button id="btn-reenter-api" class="btn-api-reset">
+                    🔑 OpenAI 키 다시 입력하기
+                    </button> -->
 
                 </div>
 
                 <div class="logo">
-                    <button><img src="/image/logo.svg" alt=""></button>
+                    <button><img src="image/logo.svg" alt=""></button>
                 </div>
             </div>
         </header>
         <div class="main_area">
             <div class="text_box">
                 <h1>그 시절, <br> 찬란했던 순간을 <br> 담아볼까요?</h1>
-                <a href="roadmap.html" class="start_btn" onclick="saveStartData()">시작하기 <img src="/image/left.svg"
+                <a href="roadmap.html" class="start_btn" onclick="saveStartData()">시작하기 <img src="image/left.svg"
                         alt=""></a>
             </div>
-            <img class="main_img" src="/image/grandfather.svg" alt="책상에 앉아 글을 쓰는 할아버지">
+            <img class="main_img" src="image/grandfather.svg" alt="책상에 앉아 글을 쓰는 할아버지">
         </div>
     </div>
 

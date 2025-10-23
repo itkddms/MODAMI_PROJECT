@@ -1,24 +1,85 @@
-// ✅ 공통 상수
-const API_BASE = "https://modami-server.onrender.com";
 
 
-const OPENAI_API_KEY = ""; 
+// ... (이하 코드 동일)
+
+/*******************************
+ * narration.js (완전 안정 + 자동 첫 TTS)
+ *******************************/
+// ... (이하 동일)
+
+
+//✅ 수정
+let OPENAI_API_KEY = "";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // ✅ 모달에서 입력한 키 불러오기
+  OPENAI_API_KEY = localStorage.getItem("GPT_KEY") || "";
+
+  if (!OPENAI_API_KEY) {
+    alert("⚠️ OpenAI API 키가 설정되어 있지 않습니다. 첫 화면에서 입력해주세요.");
+    // 모달 페이지로 리다이렉트하거나 안내 메시지 띄워도 됨
+    return;
+  }
+});
 
 
 // ✅ 가장 최근의 요약 데이터 키 찾기
 function getLatestSummaryKey(stageKey) {
-  const keys = Object.keys(localStorage).filter(k => k.startsWith(`summary_${stageKey}_`));
+  // ✅ 한글 ↔ 영어 매핑 추가
+  const stageMap = {
+    유아기: "child",
+    청소년기: "teen",
+    성인기: "adult",
+    중년기: "middle",
+    노년기: "senior",
+  };
+
+  // ✅ stageKey가 한글이면 영어로 변환
+  const normalizedKey = stageMap[stageKey] || stageKey;
+
+  const keys = Object.keys(localStorage).filter(k =>
+    k.startsWith(`summary_${normalizedKey}_`)
+  );
+
   if (keys.length === 0) return null;
-  // 최신순 정렬
   keys.sort((a, b) => b.localeCompare(a));
   return keys[0];
 }
 
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const stageParam = params.get("stage") || "child";
-  console.log("🧭 현재 인터뷰 stage:", stageParam);
+  // ✅ URL 파라미터 및 복구 로직
+  let params = new URLSearchParams(window.location.search);
+  let stageParam = params.get("stage");
+
+  // 🔹 한글→영문 매핑 (혹시 모를 누락 대비)
+  const stageMap = {
+    유아기: "child",
+    청소년기: "teen",
+    성인기: "adult",
+    중년기: "middle",
+    노년기: "senior",
+  };
+
+  // 🔹 URL 없거나 이상할 경우, localStorage 복원
+  if (
+    !stageParam ||
+    (!stageMap[stageParam] &&
+      !["child", "teen", "adult", "middle", "senior"].includes(stageParam))
+  ) {
+    stageParam = localStorage.getItem("selectedStage") || "child";
+  }
+
+  // 🔹 한글이면 영어로 변환s
+  stageParam = stageMap[stageParam] || stageParam;
+
+  // 🔹 현재 시기 다시 저장해두기 (뒤로가기 대비)
+  localStorage.setItem("selectedStage", stageParam);
+
+  console.log("🎯 현재 스테이지:", stageParam);
+
   // ✅ 인터뷰 로드 호출
   loadFollowupQuestions(stageParam);
 
@@ -33,16 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const stageInfo = stageNames[stageParam] || stageNames.child;
 
-// ✅ 네비게이션 제목 변경
-const stageTitleEl = document.getElementById("page-title"); // ← 수정됨
-if (stageTitleEl) stageTitleEl.textContent = stageInfo.label;
+  // ✅ 네비게이션 제목 변경
+  const stageTitleEl = document.getElementById("page-title");
+  if (stageTitleEl) stageTitleEl.textContent = stageInfo.label;
 
-// ✅ 배경 이미지 변경
-const bgContainer = document.getElementById("hero-image"); // ← 수정
-if (bgContainer) bgContainer.src = `image/${stageInfo.bg}`;
-
-
-
+  // ✅ 배경 이미지 변경
+  const bgContainer = document.getElementById("hero-image");
+  if (bgContainer) bgContainer.src = `image/${stageInfo.bg}`;
 });
 
 
@@ -123,75 +181,110 @@ const heroVideoEl = document.getElementById("character-video"); // <video> 엘�
 
 
 
+// 💡 전역 변수
+const heroGifEl = document.getElementById("character-video");
+
+// 👇 CSS의 transition 시간(0.4s)과 동일하게 설정하는 것이 가장 자연스럽습니다.
+//    (CSS 0.4s = JS 400ms)
+const GIF_TRANSITION_DURATION = 400; 
+
 /*********************
- * 🎬 캐릭터 상태 전환 (GIF 버전 — 3단계 상태)
+ * 🎬 캐릭터 상태 전환 (페이드 효과 + 정확한 타이밍)
  *********************/
-const heroGifEl = document.getElementById("character-video"); // <img> 요소
-
 function setCharacterState(state) {
-  if (!heroGifEl) return;
+  if (!heroGifEl || heroGifEl.dataset.state === state) return;
 
-  const gifMap = {
-    waiting: ["gif/waiting01.gif", "gif/waiting02.gif"],
-    talking: ["gif/talking01.gif", "gif/talking02.gif"],
-    listening: ["gif/listening01.gif"]
-  };
+  // 1. 현재 상태와 같으면 불필요한 전환 방지
+  if (heroGifEl.dataset.state === state) {
+    return;
+  }
 
-  if (!gifMap[state]) return;
+  // 2. 먼저 투명하게 (Fade out 시작)
+  heroGifEl.style.opacity = 0; 
 
-  // 상태가 같더라도 동일 이미지면 강제 리로드 시도
-  const gifs = gifMap[state];
-  const randomSrc = gifs[Math.floor(Math.random() * gifs.length)];
+  // 3. CSS transition 시간만큼 기다립니다.
+  setTimeout(() => {
+    // 4. 투명해진 직후에 실제 GIF 상태를 변경 (CSS가 배경 이미지 교체)
+    heroGifEl.dataset.state = state;
 
-  // ✅ 동일 파일도 다시 로드되도록 쿼리스트링 추가
-  const cacheBuster = `?v=${Date.now()}`;
-
-  heroGifEl.dataset.state = state;
-  heroGifEl.src = randomSrc + cacheBuster;
-
-  console.log(`🎞️ 캐릭터 상태 → ${state}`);
+    // 5. 다시 불투명하게 (Fade in 시작)
+    heroGifEl.style.opacity = 1;       
+  }, GIF_TRANSITION_DURATION); // CSS transition 시간과 동일하게 맞춤
 }
 
 /*********************
- * ⏸ 대기 상태 (waiting)
+ * ⏸ 대기 상태 (waiting) (페이드 효과 + 정확한 타이밍)
  *********************/
 function pauseCharacter() {
-  if (!heroGifEl) return;
-  const waitingGifs = ["gif/waiting01.gif", "gif/waiting02.gif"];
-  heroGifEl.src = waitingGifs[Math.floor(Math.random() * waitingGifs.length)];
-  heroGifEl.dataset.state = "waiting";
+  if (!heroGifEl || heroGifEl.dataset.state === "waiting") return;
+
+  // 1. 현재 상태와 같으면 불필요한 전환 방지
+  if (heroGifEl.dataset.state === "waiting") {
+    return;
+  }
+  
+  // 2. 먼저 투명하게 (Fade out 시작)
+  heroGifEl.style.opacity = 0; 
+
+  // 3. CSS transition 시간만큼 기다립니다.
+  setTimeout(() => {
+    // 4. 투명해진 직후에 실제 GIF 상태를 변경
+    heroGifEl.dataset.state = "waiting"; 
+
+    // 5. 다시 불투명하게 (Fade in 시작)
+    heroGifEl.style.opacity = 1;       
+  }, GIF_TRANSITION_DURATION);
 }
-
-
-
 
 
 /*********************
  * 🔊 TTS (narration.js 참고)
  *********************/
 async function getTtsAudio(textScript) {
-  if (window.APP_MODE?.MOCK || !window.APP_MODE?.TTS) {
-    console.log("🔇 [MOCK TTS] 음성 생략:", textScript);
-    return null; // 그냥 텍스트만 출력
+  if (!textScript) return null;
+
+  // ✅ HTML 태그 제거 (깨끗한 텍스트만 TTS에 전달)
+  textScript = textScript.replace(/<[^>]*>/g, " ").trim();
+
+  // ✅ localStorage에 저장된 키 가져오기
+  const TTS_API_KEY = localStorage.getItem("TTS_KEY");
+  if (!TTS_API_KEY) {
+    alert("⚠️ TTS API 키가 없습니다. 첫 화면에서 입력해주세요.");
+    throw new Error("Missing TTS API key");
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/tts`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ text: textScript })
-});
+    const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${TTS_API_KEY}`;
+
+    const payload = {
+      input: { text: textScript },
+      voice: { languageCode: "ko-KR", name: "ko-KR-Neural2-A" },
+      audioConfig: { audioEncoding: "MP3", speakingRate: 1.0 }
+    };
+
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
 
     const data = await res.json();
-    if (!data.audioContent) return null;
 
+    if (!data.audioContent) {
+      console.error("❌ audioContent 없음:", data.error || data);
+      return null;
+    }
+
+    // ✅ 오디오 생성 및 반환
     const audioUrl = `data:audio/mp3;base64,${data.audioContent}`;
     const audio = new Audio(audioUrl);
-    return new Promise((resolve) => {
-      audio.addEventListener("loadedmetadata", () => {
-        resolve({ audio, duration: audio.duration || 2 });
-      });
-    });
+
+   return new Promise((resolve) => {
+  audio.addEventListener("loadedmetadata", () => {
+    resolve({ audio, duration: audio.duration || 5 }); // ✅ duration 포함
+  });
+});
+
   } catch (e) {
     console.error("TTS 오류:", e);
     return null;
@@ -200,18 +293,19 @@ async function getTtsAudio(textScript) {
 
 
 /*********************
- * ⌨️ 타닥타닥 효과
+ * ⌨️ 타닥타닥 효과 (성능 문제로 타이핑 효과 제거 버전)
+ *********************/
+/*********************
+ * ⌨️ 타닥타닥 효과 (CPU 부담 완화 버전)
  *********************/
 async function typeWriter(el, text, ttsScript) {
   if (!el || !text) return;
 
-  el.innerHTML = "";
+  el.innerHTML = ""; // 텍스트를 미리 비움
 
-  // ⚠️ 여기서 미리 talking으로 두지 말고,
-  // 오디오 재생 직전에만 실행해야 함.
-
-  const audioData = await getTtsAudio(ttsScript);
-  if (!audioData) {
+  const audioData = await getTtsAudio(ttsScript); 
+  if (!audioData) { 
+    // TTS 없는 경우 (타이핑만)
     let i = 0;
     const typingSpeed = 40;
     const interval = setInterval(() => {
@@ -222,29 +316,29 @@ async function typeWriter(el, text, ttsScript) {
     return;
   }
 
+  // --- TTS가 있는 경우 (여기부터가 중요) ---
   const { audio, duration } = audioData;
 
-  // ✅ 오디오 실제 재생이 시작되면 talking으로 전환
-  audio.addEventListener("play", () => {
-    setCharacterState("talking");
-  });
-
-  // ✅ 오디오 끝나면 waiting으로
   audio.addEventListener("ended", () => {
+    console.log("⏹ 오디오 종료 - waiting으로 복귀");
     pauseCharacter();
   });
 
-  // 🎵 재생 시작
+  console.log("▶️ 오디오 재생 *요청* - talking으로 전환");
+  setCharacterState("talking"); 
   audio.play().catch(e => console.error("TTS 재생 실패:", e));
 
   const pureText = text.replace(/<br>/g, "\n").replace(/<[^>]*>/g, "").trim();
   const totalChars = pureText.length;
   let typed = 0, idx = 0;
 
+  // ----------------------------------------------------
+  // 💡 [수정] 인터벌을 100ms(0.1초)로 늘려서 CPU에 숨 쉴 틈을 줍니다.
+  // ----------------------------------------------------
   const typingInterval = setInterval(() => {
     if (audio.ended) {
       clearInterval(typingInterval);
-      el.innerHTML = text;
+      el.innerHTML = text; 
       return;
     }
 
@@ -255,15 +349,17 @@ async function typeWriter(el, text, ttsScript) {
       const char = text.charAt(idx);
       if (char === "<") {
         const tagEnd = text.indexOf(">", idx);
-        el.innerHTML += text.substring(idx, tagEnd + 1);
         idx = tagEnd + 1;
       } else {
-        el.innerHTML += char;
         idx++;
         typed++;
       }
     }
-  }, 30);
+    
+    el.innerHTML = text.substring(0, idx);
+
+  }, 100); // 💡 50ms에서 100ms (0.1초)로 변경
+  // ----------------------------------------------------
 }
 
 
@@ -300,22 +396,22 @@ recognition.onend = async () => {
 
   answerEl.classList.remove("is-recording");
   answerEl.classList.add("post-record");
-
-  // ✅ 녹음 후엔 안내문 숨김 유지
   guideEl.style.opacity = 0;
-
   btnStart.disabled = false;
   btnStop.disabled = true;
 
-     // 🪄 답변이 있으면 GPT 공감 생성
-    if (finalBuf.trim()) {
-      setTimeout(async () => {
-        setCharacterState("empathy");
-        const empathy = await generateEmpathy(finalBuf);
-        await typeWriter(questionTextEl, empathy, empathy);
-      }, 1500);
-    }
-  };
+  // 🪄 답변이 있으면 GPT 공감 생성
+  if (finalBuf.trim()) {
+    setTimeout(async () => {
+      // setCharacterState("empathy");  // ⬅️ 🐛 이 줄을 그냥 삭제하세요!
+      
+      const empathy = await generateEmpathy(finalBuf);
+      
+      // 👇 이 함수가 오디오 재생 시 알아서 'talking'으로 바꿉니다.
+      await typeWriter(questionTextEl, empathy, empathy); 
+    }, 1500);
+  }
+};
 
 };
 
@@ -334,24 +430,26 @@ btnStart.addEventListener("click", () => {
   if (!recognition || recognizing) return;
 
   // 1. 캐릭터 상태를 '듣는 중'으로 변경
-  setCharacterState("listening");
+  // 👈 1. 먼저 GIF 재생을 *요청*함
 
-  // 2. 음성 인식 시작
-  recognition.start();
-  recognizing = true; // 녹음 상태 플래그 활성화
-
-  // 3. UI 업데이트: 녹음 중 상태로 변경하고, 텍스트 출력 영역을 표시
+  // 2. UI 업데이트: 녹음 중 상태로 변경
   answerEl.classList.remove("post-record");
   answerEl.classList.add("is-recording", "show-output");
-
-  // 4. 버튼 상태 변경: '시작' 비활성화, '중지' 활성화
   btnStart.disabled = true;
   btnStop.disabled = false;
-
-  // 5. 가이드 메시지 숨기기
   guideEl.style.opacity = 0;
-});
 
+  // 💡 3. (중요) 100ms 정도 기다려서 GIF가 렌더링될 시간을 확보한 후,
+  //    무거운 음성 인식을 시작합니다.
+  // setTimeout(() => {
+  //   if (recognizing) return; // (혹시 모를 중복 실행 방지)
+    
+  //   recognition.start(); // 👈 4. 이제 CPU를 많이 쓰는 작업을 시작
+  //   recognizing = true; // 녹음 상태 플래그 활성화
+  // }, 50); // 100ms = 0.1초. 이 시간은 50~150 사이로 조절 가능
+  recognition.start();
+  recognizing = true;
+});
 
 /**
  * @description 녹음 중지 버튼 클릭 시
@@ -388,6 +486,7 @@ btnRestart.addEventListener("click", () => {
   if (guideEl) {
     guideEl.style.opacity = 1;
   }
+  pauseCharacter();
 });
 
 /*********************
@@ -517,7 +616,7 @@ function renderQuestion() {
   if (!cur) return;
 
   // 🎞️ 캐릭터 상태 talking
-  setCharacterState("talking");
+  // setCharacterState("talking");
 
 
 if (currentQuestionIdx === 0) {
@@ -575,6 +674,7 @@ if (nextTextEl) {
  * 🔘 다음 / 이전 버튼
  *********************/
 btnNext.addEventListener("click", () => {
+  // 1. 현재 답변을 임시 변수에 저장
   answers[currentQuestionIdx] = outEl.textContent.trim();
 
   if (currentQuestionIdx < followupItems.length - 1) {
@@ -583,6 +683,7 @@ btnNext.addEventListener("click", () => {
     finalBuf = "";
     outEl.textContent = "";
     renderQuestion();
+
   } else {
     // 🔹 모든 질문이 끝났을 때
     console.log("✅ 모든 질문 완료됨");
@@ -590,6 +691,36 @@ btnNext.addEventListener("click", () => {
     const params = new URLSearchParams(window.location.search);
     const stage = params.get("stage") || "child";
 
+    // ======================================================
+    // 👇 [핵심] 이 저장 로직이 autobiography.js와 일치해야 합니다.
+    // ======================================================
+    
+    // 1. 질문(followupItems)과 답변(answers)을 합칩니다.
+    const interviewData = followupItems.map((item, index) => {
+      return {
+        // autobiography.js가 원하는 형식:
+        title: item.question,  // 'title' 키에 질문을
+        content: answers[index] || "" // 'content' 키에 답변을
+      };
+    });
+
+    // 2. [중요] 데이터를 'interview_...' 키로 *각각 분리해서* 저장합니다.
+    try {
+      interviewData.forEach((item, index) => {
+        // autobiography.js가 찾는 'interview_스테이지_' 키 형식
+        const itemKey = `interview_${stage}_${Date.now() + index}`; 
+        localStorage.setItem(itemKey, JSON.stringify(item));
+      });
+      console.log(`🎙️ 전사 내용 ${interviewData.length}개 분리 저장 완료 (interview_${stage}_...)`);
+    } catch (e) {
+      console.error("전사 내용 저장 실패:", e);
+    }
+    
+    // ======================================================
+    // [수정] 끝
+    // ======================================================
+
+    // ... (이하 stageMap, localStorage 상태 저장, 페이지 이동 로직은 동일) ...
     const stageMap = {
       child: 2,
       teen: 2,
@@ -607,26 +738,20 @@ btnNext.addEventListener("click", () => {
     // ✅ 다음 이동 로직
     switch (stage) {
       case "child":
+        window.location.href = "main-interview.html?stage=teen";
+        break;
       case "teen":
-        // 2단계 끝 → 로드맵으로
         window.location.href = "roadmap.html";
         break;
-
       case "adult":
-        // 성인기 끝 → 중년기로
         window.location.href = "main-interview.html?stage=middle";
         break;
-
       case "middle":
-        // 중년기 끝 → 로드맵으로 (3단계 완료)
         window.location.href = "roadmap.html";
         break;
-
       case "senior":
-        // 노년기 끝 → 로드맵으로 (최종 종료)
         window.location.href = "roadmap.html";
         break;
-
       default:
         window.location.href = "roadmap.html";
         break;
@@ -671,8 +796,14 @@ btnPrev.addEventListener("click", () => {
     }
 
     // 🔹 다음 버튼 텍스트 복원
-    btnNext.textContent =
-      currentQuestionIdx === followupItems.length - 1 ? "완료" : "다음";
-  }
+   const nextTextEl = btnNext.querySelector(".btn-next-text");
+   if (nextTextEl) {
+     if (currentQuestionIdx === followupItems.length - 1) {
+       nextTextEl.textContent = "완료";
+     } else {
+       nextTextEl.textContent = "다음";
+     }
+   }
+ }
 });
 

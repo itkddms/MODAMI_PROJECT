@@ -17,29 +17,76 @@ const questionTextEl = document.getElementById('question-text');
 const heroImageEl = document.getElementById('hero-image');
 
 
-
-/*************** 페이지 설정(성인기, 노년기) ***************/
+/*************** 페이지 설정(유아기~노년기 전체) ***************/
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const stage = urlParams.get('stage'); 
 
-    if (stage === 'adult') {
-        // 성인기 페이지 상태 설정 (외부 HTML에서 돌아왔을 때)
+    // ✅ 로컬스토리지에서 성별 불러오기 (기본값은 "할머니")
+    const gender = localStorage.getItem("selectedGender") || "할머니";
+    console.log("👩 선택된 성별:", gender);
+
+    // ✅ 뒤로가기 버튼 설정 (narration.html로 이동)
+    const btnBack = document.getElementById('btn-back');
+    if (btnBack) {
+        btnBack.addEventListener('click', () => {
+            const returnStep = urlParams.get("returnStep") || "1";
+            window.location.href = `narration.html?step=${returnStep}`;
+        });
+    }
+
+    // ✅ 단계별 화면 설정
+    if (stage === 'child') {
+        pageTitleEl.textContent = '유아기 (0-12세)';
+        questionTextEl.innerHTML = `${gender}! 유아기 시절에 가장<br />인상 깊었던 일들들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/child_bg.svg';
+        heroImageEl.alt = '유아기 일러스트';
+        pageTitleEl.style.color = 'black';
+        questionTextEl.style.color = 'black';
+
+    } else if (stage === 'teen') {
+        pageTitleEl.textContent = '청소년기 (13-19세)';
+        questionTextEl.innerHTML = `${gender}! 청소년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/teen_bg.svg';
+        heroImageEl.alt = '청소년기 일러스트';
+        pageTitleEl.style.color = 'black';
+        questionTextEl.style.color = 'black';
+
+    } else if (stage === 'adult') {
         pageTitleEl.textContent = '성인기 (20-39세)';
-        questionTextEl.innerHTML = '할머니! 성인기 시절에 가장<br />인상 깊었던 일을 말씀해 주세요.';
-        heroImageEl.src = 'image/adult_bg.svg'; // 성인기 이미지 경로
+        questionTextEl.innerHTML = `${gender}! 성인기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/adult_bg.svg';
         heroImageEl.alt = '성인기 일러스트';
         pageTitleEl.style.color = 'white';
         questionTextEl.style.color = 'white';
 
+    } else if (stage === 'middle') {
+        pageTitleEl.textContent = '중년기 (40-64세)';
+        questionTextEl.innerHTML = `${gender}! 중년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/middle_bg.svg';
+        heroImageEl.alt = '중년기 일러스트';
+        pageTitleEl.style.color = 'black';
+        questionTextEl.style.color = 'black';
+
     } else if (stage === 'senior') {
-        // 노년기 페이지 상태 설정 (두 번째 외부 HTML에서 돌아왔을 때)
         pageTitleEl.textContent = '노년기 (65세 이상)';
-        questionTextEl.innerHTML = '할머니! 노년기 시절에 가장<br />인상 깊었던 일을 말씀해 주세요.';
-        heroImageEl.src = 'image/senior_bg.svg'; // 노년기 이미지 경로
+        questionTextEl.innerHTML = `${gender}! 노년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/senior_bg.svg';
         heroImageEl.alt = '노년기 일러스트';
+        pageTitleEl.style.color = 'black';
+        questionTextEl.style.color = 'black';
+
+    } else {
+        // ✅ 예외 처리 (stage가 없을 경우)
+        pageTitleEl.textContent = '사전 인터뷰';
+        questionTextEl.innerHTML = `${gender}! 인생에서 기억에 남는 일들을 말씀해 주세요.`;
+        heroImageEl.src = 'image/default_bg.svg';
+        heroImageEl.alt = '기본 배경';
+        pageTitleEl.style.color = 'black';
+        questionTextEl.style.color = 'black';
     }
 });
+
 
 
 /*************** 전사 기능 ***************/
@@ -137,6 +184,8 @@ btnNext.addEventListener('click', () => {
     const currentPageTitle = pageTitleEl.textContent.trim();
     const urlParams = new URLSearchParams(window.location.search);
     const returnStep = urlParams.get("returnStep") || "3"; 
+    const gender = localStorage.getItem("selectedGender") || "할머니";
+  console.log("👩 선택된 성별:", gender);
 
     // 1. 데이터 저장 및 다음 상태 결정
     if (content) {
@@ -147,7 +196,7 @@ btnNext.addEventListener('click', () => {
         if (currentPageTitle === '유아기 (0-12세)') {
             title = "유아기 사전인터뷰";
             keyPrefix = "child";
-        } else if (currentPageTitle === '청소년기 (12-19세)') {
+        } else if (currentPageTitle === '청소년기 (13-19세)') {
             title = "청소년기 사전인터뷰";
             keyPrefix = "teen";
         } else if (currentPageTitle === '성인기 (20-39세)') {
@@ -180,20 +229,21 @@ btnNext.addEventListener('click', () => {
     // 2. 페이지 전환 및 이동 (로직 분기)
     if (currentPageTitle === '유아기 (0-12세)') {
         // 유아기 -> 청소년기 (페이지 내 전환)
-        pageTitleEl.textContent = '청소년기 (12-19세)';
-        questionTextEl.innerHTML = '할머니! 청소년기 시절에 가장<br />인상 깊었던 일을 말씀해 주세요.';
+        pageTitleEl.textContent = '청소년기 (13-19세)';
+        questionTextEl.innerHTML = `${gender}! 청소년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/teen_bg.svg';
         heroImageEl.alt = '청소년기 일러스트';
 
-    } else if (currentPageTitle === '청소년기 (12-19세)') {
-        // 청소년기 -> 다른 HTML (첫 번째 분기점)
-        // **TODO: next_stage_1.html 부분을 실제 파일 경로로 변경하세요.**
-         window.location.href = `narration.html?step=${returnStep}`;
+    } else if (currentPageTitle === '청소년기 (13-19세)') {
+        // ✅ 청소년기 마지막이면 요약(내레이션) 페이지로 이동
+        const nextStep = parseInt(returnStep) || 3;
+        window.location.href = `narration.html?step=${nextStep}`;
+
 
     } else if (currentPageTitle === '성인기 (20-39세)') {
         // 성인기 -> 중년기 (페이지 내 전환)
         pageTitleEl.textContent = '중년기 (40-64세)';
-        questionTextEl.innerHTML = '할머니! 중년기 시절에 가장<br />인상 깊었던 일을 말씀해 주세요.';
+        questionTextEl.innerHTML = `${gender}! 중년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/middle_bg.svg'; // 중년기 이미지 경로
         heroImageEl.alt = '중년기 일러스트';
         pageTitleEl.style.color = 'black';
@@ -201,8 +251,9 @@ btnNext.addEventListener('click', () => {
 
     } else if (currentPageTitle === '중년기 (40-64세)') {
         // ✅ 중년기 → narration(노년기 단계로 복귀)
-        const nextStep = parseInt(returnStep) + 1;  // 예: 2 → 3
-        window.location.href = `narration.html?step=${nextStep}`;
+        // const nextStep = parseInt(returnStep) + 1;  // 예: 2 → 3
+        const nextStep = parseInt(returnStep);
+        window.location.href = "narration.html?step=5";
 
     } else if (currentPageTitle === '노년기 (65세 이상)') {
         // ✅ 노년기 → 마지막 마무리 내레이션(step 7)

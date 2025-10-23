@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const recordedText = outputText.textContent;
             
             if (step === 2) {
+                // 출생년도 처리
                 if (recordedText) {
                     const numbers = recordedText.match(/\d+/g);
                     if (numbers) {
@@ -126,16 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.log(`[Step ${step}] 추출된 출생년도 ${year}를 LocalStorage에 저장했습니다.`);
                     }
                 }
-            } else { // 3단계 포함
+                goToStep3();
+            } 
+            
+            else if (step === 3) {
+                // 제목 처리
                 if (recordedText) {
                     localStorage.setItem(`recordedText_step${step}`, recordedText);
-                    console.log(`[Step ${step}] 최종 텍스트 "${recordedText}"를 LocalStorage에 저장했습니다.`);
+                    localStorage.setItem("autobiographyTitle", recordedText); // ✅ 자서전 제목 저장
+                    console.log(`[Step ${step}] 자서전 제목 "${recordedText}"를 LocalStorage에 저장했습니다.`);
+                } else {
+                    alert("자서전 제목을 말씀해 주세요.");
+                    return;
                 }
+
+                goToNextPage();
             }
-            
-            if (step === 2) goToStep3();
-            else if (step === 3) goToNextPage();
         });
+
     };
 
     // 각 단계의 녹음 UI에 기능 적용

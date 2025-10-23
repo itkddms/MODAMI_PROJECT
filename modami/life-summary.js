@@ -7,7 +7,19 @@
 
 
 
-const OPENAI_API_KEY = "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"; // ⚠️ 테스트용만, 배포금지
+// ✅ 수정
+let OPENAI_API_KEY = "";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  // ✅ 모달에서 입력한 키 불러오기
+  OPENAI_API_KEY = localStorage.getItem("GPT_KEY") || "";
+
+  if (!OPENAI_API_KEY) {
+    alert("⚠️ OpenAI API 키가 설정되어 있지 않습니다. 첫 화면에서 입력해주세요.");
+    // 모달 페이지로 리다이렉트하거나 안내 메시지 띄워도 됨
+    return;
+  }
+});
 
 document.addEventListener("DOMContentLoaded", async () => {
   // ✅ URL 파라미터 감지만 사용 (localStorage는 무시)
@@ -59,18 +71,20 @@ const stageName = prefixMap[prefix] || "유아기";
     const summary = await summarizeTranscript(fullText, stageName);
     const items = Array.isArray(summary.items) ? summary.items : [];
 
-    await renderSummaryCards(items);
-
-    // ✅ 시기별 요약 저장
+    // ✅ (1) 요약 결과 먼저 로컬스토리지에 저장
     localStorage.setItem(
       `summary_${prefix}_${Date.now()}`,
       JSON.stringify({ stage: stageName, items, time: new Date().toLocaleString() })
     );
+
+    // ✅ (2) 이후 이미지 생성은 비동기로 렌더링
+    renderSummaryCards(items);
+
   } catch (err) {
     console.error("요약 오류:", err);
     container.innerHTML = `<div class="error">요약 중 오류 발생: ${err.message}</div>`;
   }
-});
+  });
 
 /*******************************
  * GPT 요약 요청
@@ -267,3 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+
+
+

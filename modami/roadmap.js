@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   const stepsData = [
-  { step: "1단계", title: "양식, 일대기 작성", imgSrc: "/image/first.svg", href: "intro.html" },
-  { step: "2단계", title: "유아기, 청소년기", imgSrc: "/image/second.svg", href: "life-summary.html?stage=child" },
-  { step: "3단계", title: "성인기, 중년기", imgSrc: "/image/third.svg", href: "life-summary.html?stage=adult" },
-  { step: "4단계", title: "노년기", imgSrc: "/image/fourth.svg", href: "life-summary.html?stage=senior" },
-    { step: "5단계", title: "자서전 수정", imgSrc: "/image/fifth.svg", href: "autobiography.html" }
+  { step: "1단계", title: "양식, 일대기 작성", imgSrc: "image/first.svg", href: "intro.html" },
+  { step: "2단계", title: "유아기, 청소년기", imgSrc: "image/second.svg", href: "life-summary.html?stage=child" },
+  { step: "3단계", title: "성인기, 중년기", imgSrc: "image/third.svg", href: "life-summary.html?stage=adult" },
+  { step: "4단계", title: "노년기", imgSrc: "image/fourth.svg", href: "life-summary.html?stage=senior" },
+    { step: "5단계", title: "자서전 수정", imgSrc: "image/fifth.svg", href: "autobiography.html" }
   ];
 
   const roadContainer = document.querySelector('.road');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="step completed">
           <h3>${data.step}</h3>
           <p>${data.title}</p>
-          <img src="/image/check.svg" alt="완료">
+          <img src="image/check.svg" alt="완료">
           <button class="step_btn done" disabled>완료</button>
         </div>
       `;
@@ -49,11 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="step inactive">
           <h3>${data.step}</h3>
           <p>${data.title}</p>
-          <img src="/image/lock.svg" alt="잠김">
+          <img src="image/lock.svg" alt="잠김">
           <button class="step_btn" disabled>${prevStep}단계 진행하기</button>
         </div>
       `;
     }
+      localStorage.setItem("stageStatus_1", "completed");
+localStorage.setItem("roadmapProgress", "1");
 
 
     roadContainer.innerHTML += stepHTML;

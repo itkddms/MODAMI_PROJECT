@@ -1,6 +1,14 @@
 const characterEl = document.getElementById("character-video");
 let audioUnlocked = false;
 
+// 🔽 [추가] 이미지 미리 로드
+const talkingGif = new Image();
+talkingGif.src = "gif/talking02.gif";
+const waitingGif = new Image();
+waitingGif.src = "gif/waiting02.gif";
+// 🔼 [추가] 여기까지
+
+
 /*******************************
  * narration.js (완전 안정 + 자동 첫 TTS)
  *******************************/
@@ -76,36 +84,51 @@ document.addEventListener("DOMContentLoaded", async () => {
   /*******************************
    * 🎙️ TTS 함수
    *******************************/
-  async function getTtsAudio(textScript) {
-    if (!textScript) return null;
-    textScript = textScript.replace(/<[^>]*>/g, " ").trim();
-    try {
-      const res = await fetch(
-        "https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyDDObeWPQpbKl5E8MbYL_PpDkFcpIUQ4K8",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            input: { text: textScript },
-            voice: { languageCode: "ko-KR", name: "ko-KR-Neural2-A" },
-            audioConfig: { audioEncoding: "MP3", speakingRate: 1.0 }
-          })
-        }
-      );
+async function getTtsAudio(textScript) {
+  if (!textScript) return null;
 
-      const data = await res.json();
-      if (!data.audioContent) {
-        console.error("❌ audioContent 없음:", data.error || data);
-        return null;
-      }
-      const audioUrl = `data:audio/mp3;base64,${data.audioContent}`;
-      const audio = new Audio(audioUrl);
-      return { audio };
-    } catch (e) {
-      console.error("TTS 오류:", e);
+  // ✅ HTML 태그 제거 (깨끗한 텍스트만 TTS에 전달)
+  textScript = textScript.replace(/<[^>]*>/g, " ").trim();
+
+  // ✅ localStorage에 저장된 키 가져오기
+  const TTS_API_KEY = localStorage.getItem("TTS_KEY");
+  if (!TTS_API_KEY) {
+    alert("⚠️ TTS API 키가 없습니다. 첫 화면에서 입력해주세요.");
+    throw new Error("Missing TTS API key");
+  }
+
+  try {
+    const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${TTS_API_KEY}`;
+
+    const payload = {
+      input: { text: textScript },
+      voice: { languageCode: "ko-KR", name: "ko-KR-Neural2-A" },
+      audioConfig: { audioEncoding: "MP3", speakingRate: 1.0 }
+    };
+
+    const res = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!data.audioContent) {
+      console.error("❌ audioContent 없음:", data.error || data);
       return null;
     }
+
+    // ✅ 오디오 생성 및 반환
+    const audioUrl = `data:audio/mp3;base64,${data.audioContent}`;
+    const audio = new Audio(audioUrl);
+
+    return { audio };
+  } catch (e) {
+    console.error("TTS 오류:", e);
+    return null;
   }
+}
 
   /*******************************
    * ✏️ 타닥 효과 + 오디오 동기화
@@ -138,20 +161,21 @@ async function typeWriter(el, text, ttsScript) {
     return;
   }
 
-  // 🎞️ 캐릭터 상태
-  audio.addEventListener("play", () => {
-    if (characterEl) characterEl.src = "gif/talking02.gif";
-  });
-  audio.addEventListener("ended", () => {
-    if (characterEl) characterEl.src = "gif/waiting02.gif";
+// 🎞️ 캐릭터 상태 제어 (캐시 방지 쿼리 제거)
+audio.addEventListener("play", () => {
+  if (characterEl) {
+    characterEl.src = `gif/talking02.gif`; // ✅ ?${Date.now()} 제거
+    characterEl.style.opacity = "1";
+  }
+});
 
-    // ✅ 마지막 단계 자동 완료 저장
-    if (step === 7 && currentTextIndex === textTemplates.length - 1) {
-      localStorage.setItem("stageStatus_1", "completed");
-      localStorage.setItem("roadmapProgress", "1");
-      console.log("🎯 1단계 완료 자동 저장됨 (오디오 끝)");
-    }
-  });
+audio.addEventListener("ended", () => {
+  if (characterEl) {
+    characterEl.src = `gif/waiting02.gif`; // ✅ ?${Date.now()} 제거
+    characterEl.style.opacity = "1";
+  }
+  // ... (이하 생략)
+});
 
 
   // 🎧 실제 재생

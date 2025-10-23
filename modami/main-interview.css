@@ -388,7 +388,13 @@ html, body{
     /* border: orangered 3px solid; */
     width: 400px;
     height: 600px;
-    transition: opacity 0.3s ease;
+    /* transition: opacity 0.3s ease; */
+    background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* 👇 이 두 줄을 추가하세요 */
+
+  transition: opacity 0.4s ease; /* 0.3초 동안 부드럽게 변경 */
  }
 
   #character-video img{
@@ -397,7 +403,19 @@ html, body{
     height: auto;
   }
 
- video {
-   mix-blend-mode: ove;
-   background: transparent;
+
+
+#character-video[data-state="waiting"] {
+  /* waiting01과 02를 랜덤으로 못하지만, 
+    우선 작동하는 게 중요하니 하나만 지정합니다. 
+  */
+  background-image: url('../modami/gif/waiting01.gif');
 }
+
+#character-video[data-state="talking"] {
+  background-image: url('../modami/gif/talking02.gif');
+}
+
+/* #character-video[data-state="listening"] {
+  background-image: url('../modami/gif/listening01.gif');
+} */

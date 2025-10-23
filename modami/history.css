@@ -3,19 +3,19 @@
 /* 각 시대별 배경 이미지 */
 
 .history_child_bg {
-    background-image: url('../image/1940.svg');
+    background-image: url('image/1961.svg');
 }
 .history_teen_bg {
-    background-image: url('../image/1950.svg');
+    background-image: url('image/1971.svg');
 }
 .history_adult_bg {
-    background-image: url('../image/1960.svg');
+    background-image: url('image/1988.svg');
 }
 .history_middle_bg {
-    background-image: url('../image/1950.svg');
+    background-image: url('image/2000.svg');
 }
 .history_senior_bg {
-    background-image: url('../image/1940.svg');
+    background-image: url('image/2020.svg');
 }
 
 
