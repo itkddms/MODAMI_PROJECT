@@ -807,3 +807,45 @@ btnPrev.addEventListener("click", () => {
  }
 });
 
+
+
+/*******************************
+ * ⏭️ 스킵 버튼 기능
+ *******************************/
+const skipBtn = document.querySelector(".skipbtn");
+
+if (skipBtn) {
+  skipBtn.addEventListener("click", () => {
+    // 현재 스테이지 확인
+    const params = new URLSearchParams(window.location.search);
+    const stage = params.get("stage") || "child";
+
+    // 각 시기별 이동 경로 설정
+    const nextStageMap = {
+      child: "main-interview.html?stage=teen",  // 유아기 → 청소년기
+      teen: "roadmap.html",                     // 청소년기 → 로드맵
+      adult: "main-interview.html?stage=middle",// 성인기 → 중년기
+      middle: "roadmap.html",                   // 중년기 → 로드맵
+      senior: "roadmap.html"                    // 노년기 → 로드맵
+    };
+
+    const nextUrl = nextStageMap[stage] || "roadmap.html";
+
+    // 단계 완료 저장 (roadmap용)
+    const stageProgressMap = {
+      child: 2,
+      teen: 2,
+      adult: 3,
+      middle: 3,
+      senior: 4
+    };
+
+    const progressNum = stageProgressMap[stage] || 2;
+    localStorage.setItem(`stageStatus_${progressNum}`, "completed");
+    localStorage.setItem("roadmapProgress", String(progressNum));
+    console.log(`⏭️ [스킵버튼] ${stage} 단계를 완료로 저장하고 ${nextUrl}로 이동합니다.`);
+
+    // 페이지 이동
+    window.location.href = nextUrl;
+  });
+}

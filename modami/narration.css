@@ -183,8 +183,10 @@
 
  #character-video {
     position: absolute;
-    top: 100px;
-    right: 700px;
+    position: fixed;
+    left: 80px;
+   bottom: 120px;
+  /* transform: translateX(-50%); */
     z-index: 0;
     opacity: 1;
     pointer-events: none;

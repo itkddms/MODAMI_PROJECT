@@ -235,13 +235,25 @@ audio.addEventListener("ended", () => {
     if (currentTextIndex < texts.length) playText(currentTextIndex);
   });
 
-  if (skipBtn) {
-    skipBtn.addEventListener("click", () => {
-      if (currentAudio) currentAudio.pause();
-      if (typingInterval) clearInterval(typingInterval);
+if (skipBtn) {
+  skipBtn.addEventListener("click", () => {
+    // 오디오 및 타이핑 중단
+    if (currentAudio) currentAudio.pause();
+    if (typingInterval) clearInterval(typingInterval);
+
+    // 현재 단계(step)에 해당하는 next 링크 탐색
+    const currentTemplates = templatesByStep[step];
+    const lastTemplate = currentTemplates[currentTemplates.length - 1];
+
+    if (lastTemplate?.next) {
+      // next 경로가 있으면 바로 이동
+      window.location.href = lastTemplate.next;
+    } else {
+      // next 경로가 없는 단계라면 현재 텍스트만 즉시 완성
       texts[currentTextIndex].innerHTML = textTemplates[currentTextIndex].displayText;
-    });
-  }
+    }
+  });
+}
 
   /*******************************
    * 🚀 첫 문장 자동 실행
