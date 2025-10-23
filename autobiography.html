@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>autobiography</title>
+  <link rel="stylesheet" href="autobiography.css">
+</head>
+
+<body class="container" id="container-main">
+  <!-- 내비바 -->
+  <header class="nav">
+    <button id="btn-back" class="nav-left" aria-label="뒤로가기" type="button">
+      <img src="image/back_btn.svg" alt="뒤로가기 버튼" />
+    </button>
+    <div class="autobio-label">
+        <h1 id="autobio-title">나의 찬란했던 인생</h1>
+        <p id="autobio-date">2025. 05. 02</p>
+    </div>
+    <button id="btn-edit" class="nav-right" aria-label="수정" type="button">수정
+    </button>
+  </header>
+ <div id="loading-spinner" class="loading-overlay" style="display:none;">
+  <div class="spinner"></div>
+  <p class="loading-text">담이가 당신의 이야기를 집필 중이에요...</p>
+</div>
+  
+   <section class="autobio-container">
+    <div class="page" id="autobio-content">
+      <div class="content-label">
+        <p id="stage-text"></p>
+        <h1 id="question-text"></h1>
+      </div>
+      <div id="autobio-content-story" class="story-text"></div>
+    </div>
+  </section>
+
+  <section class="page-controller">
+    <button id="btn-page-back" class="page-back" aria-label="뒤로가기" type="button">
+      <img src="image/page-back_btn.svg" alt="뒤로가기 버튼" />
+    </button>
+    <div class="page-number"><span class="current">1</span> / <span class="total">1</span></div>
+    <button id="btn-page-next" class="page-next" aria-label="앞으로가기" type="button">
+      <img src="image/page-next_btn.svg" alt="뒤로가기 버튼" />
+    </button>
+
+      <div id="measure-box"></div>
+
+  </section>
+
+  <script src="autobiography.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,451 @@
+/* 나눔바른고딕 300 400 700 */
+@font-face {
+ font-family: 'NanumBarunGothic';
+ font-style: normal;
+ font-weight: 300;
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot?#iefix') format('embedded-opentype'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.woff') format('woff'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.ttf') format('truetype');
+}
+
+@font-face {
+ font-family: 'NanumBarunGothic';
+ font-style: normal;
+ font-weight: 400;
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+}
+
+@font-face {
+ font-family: 'NanumBarunGothic';
+ font-style: normal;
+ font-weight: 700;
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot');
+ src: url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot?#iefix') format('embedded-opentype'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.woff') format('woff'), url('//fastly.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.ttf') format('truetype')
+}
+
+.nanumbarungothic * {
+ font-family: 'NanumBarunGothic', sans-serif;
+}
+
+:root{
+    --primary--color: #6ABEFE;
+    --primary-light--color: #E1F2FF;
+    --black--color: #303030;
+    --white--color: #FFFFFF;
+    --background--color: #F7F7F7;
+    --gray100--color: #F4F4F4;
+    --gray200--color: #F0F0F0;
+    --gray300--color: #E9E9E9;
+    --gray400--color: #D6D6D6;
+    --gray500--color: #A7A7A7; 
+    --gray600--color: #3E3E3E;   
+}
+
+/* 버튼 기본 설정 제거 */
+button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  outline: none;                 /* 기본 아웃라인 제거 */
+  -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'NanumBarunGothic', sans-serif;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+html, body{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.nav{
+    background: transparent;
+    width: 100%;
+    height: 100px;
+    /* position: relative; */
+    top: 0; left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 90px;
+    z-index: 10;
+}
+
+.nav h1{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--gray600--color);
+    font-family: NanumBarunGothicOTF;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px;
+}
+/* 나중에 내비바 변경시 참고 */
+/* .header {
+  display: none;
+  background-color: none;
+}
+
+.header.visible{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray100--color);
+} */
+
+.hero {
+  position: absolute;
+  width: 100vw;           /* 원하는 너비 */
+  height: 65vh;          /* 원하는 높이 */
+  display: flex;
+  /* justify-content: center; */
+  align-items: flex-end; /* 아래쪽에 배치 */
+  overflow: hidden;
+  /* z-index: 1; */
+}
+
+.hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 🖼️ 배경 이미지 */
+#hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1; /* 영상보다 아래 */
+}
+
+
+.interview-sheet {
+    width: 100%;
+    height: calc(100% - 100px);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.interview-question {
+    margin-top: 80px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 100px;
+    padding: 0 90px;
+}
+
+.interview-question h2 {
+    width: 680px;
+    height: calc(1.4em * 2);
+    color: var(--black--color);
+    /* text-align: center; */
+    font-family: NanumBarunGothicOTF;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 151%;
+}
+
+.interview-answer {
+    width: 100%;
+    height: 100vh;
+    /* margin-bottom: 40px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 100px 100px 0 0;
+    box-shadow: 0 -6px 23.4px 4px rgba(106, 190, 254, 0.05);
+    /* gap: 20px; */
+    background-color: var(--white--color);
+}
+
+/* 인터뷰 진행 번호 (예: 1/5) */
+#interview-progress {
+  position: absolute;
+  right: 90px;
+  top: 40px;
+  font-size: 32px;
+  font-family: NanumBarunGothicOTF;
+  font-weight: 700;
+  color: var(--gray600--color);
+}
+
+#interview-progress .current,
+#interview-progress .divider {
+  color: var(--black--color); /* 현재 진행번호와 /는 검정 */
+  font-weight: 700;
+  font-size: 32px;
+  /* line-height: 1; */
+}
+
+#interview-progress .total {
+  color: var(--gray500--color); /* 총 페이지 수는 회색 */
+  font-weight: 700;
+  font-size: 32px;
+  /* line-height: 1; */
+}
+
+
+
+.answer-display {
+    width: 80%;
+    padding-top: 90px;
+    margin-bottom: 98px;
+    position: relative;
+    /* height: calc(1.6em * 2); */
+    line-height: 1.6;
+    text-align: center;
+    color: var(--gray500--color);
+    text-align: center;
+    font-size: 42px;
+    font-style: regular;
+    font-weight: 400;
+
+    /* ✅ 추가 부분 */
+    min-height: 164px;         /* 전사 텍스트 영역 최소 높이 확보 */
+    display: flex;             /* 세로 중앙 정렬 */
+    flex-direction: column;
+    justify-content: center;
+}
+
+.guide-text, .answer-output {
+  transition: opacity .26s ease, transform .26s ease;
+}
+.guide-text   { opacity:1; transform: translateY(0);    color:#8a8a8a; }
+
+.answer-output{
+    opacity:0; transform: translateY(4px);
+    height: calc(1.4em * 2); /* 최대 2줄 */
+    overflow-y: auto;      /* 내용이 많아지면 스크롤 */
+    white-space: normal;   /* 지정된 폭 안에서 자동 줄바꿈 */
+    word-break: keep-all;  /* 한국어 단어 단위 유지 */
+    position: absolute;
+    top: 65px;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    color: var(--black--color);
+}
+
+/* ============== */
+.show-output .answer-output {
+  opacity: 1;
+}
+
+/* 상태: 녹음 중 */
+#answer.is-recording .guide-text   { opacity:0; transform: translateY(-4px); pointer-events:none; }
+#answer.is-recording .answer-output{ opacity:1; transform: translateY(0); }
+
+/* 버튼 겹치기 + 크로스페이드 */
+.record-controls{
+    position: relative;
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    width:100%;
+    padding: 0 90px;
+}
+
+#answer.is-recording .record-btn{ opacity:0; transform:scale(1.08); pointer-events:none; }
+#answer.is-recording .stop-btn  { opacity:1; transform:scale(1);    pointer-events:auto; }
+
+/* 중앙 스택 */
+.center-btn{ 
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 114px; height: 114px;
+    background: transparent !important;
+    box-shadow: none !important;
+ }
+
+.center-btn > button{
+  position:absolute; 
+  inset:0;
+  transform: translateX(-50%);
+  /* width:92px; height:92px; */
+  border:0;
+  transition:opacity .2s ease, transform .2s ease;
+  opacity:0; transform:scale(.9); pointer-events:none;
+}
+
+/* 기본(대기): 마이크 버튼만 보임 */
+#answer .record-btn{ opacity:1; transform:scale(1); pointer-events:auto; }
+
+/* 녹음 중: 정지만 보임 */
+#answer.is-recording .record-btn{ opacity:0; pointer-events:none; transform:scale(1.08); }
+#answer.is-recording .stop-btn  { opacity:1; pointer-events:auto;  transform:scale(1);   }
+
+/* 녹음 종료(포스트): 재시작만 보임 */
+#answer.post-record .record-btn{ opacity:0; pointer-events:none; transform:scale(1.08); }
+#answer.post-record .stop-btn  { opacity:0; pointer-events:none; transform:scale(.9);   }
+#answer.post-record .restart-btn{ opacity:1; pointer-events:auto; transform:scale(1);   }
+
+.next-btn{
+    margin-left: auto; 
+    padding:12px 18px; border-radius:12px; border:0;
+    background:var(--primary--color);
+    font-weight:600;
+    box-shadow:0 6px 18px rgba(0,0,0,.10);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .22s ease;
+    display: flex;
+    width: 162px;
+    height: 72px;
+    gap: 16px;
+    justify-content: center;
+    border-radius: 16px;
+    align-items: center;
+}
+
+.btn-next-text {
+     /* width: 60px; */
+     color: var(--white--color);
+     font-size: 28px;
+     font-weight: 600;
+ }
+
+#answer.post-record .next-btn{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+.prev-btn {
+  margin-right: auto;
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 0;
+  background: var(--gray300--color);
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.25s ease;
+  display: flex;
+  width: 162px;
+  height: 72px;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 🔹 기본적으로는 보여줌 */
+
+/* 🔹 완전히 숨길 때는 이 클래스 추가 */
+.prev-btn.hide {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.3s ease;
+}
+
+/* 🔹 완전히 제거 (공간까지 없애려면 이렇게) */
+.prev-btn.hidden {
+  display: none;
+}
+
+
+.btn-prev-text {
+     /* width: 60px; */
+     color: var(--gray500--color);
+     font-size: 28px;
+     font-weight: 600;
+ }
+
+
+ #character-video {
+    position: absolute;
+    top: 60px;
+    right: 30px;
+    z-index: 3;
+    opacity: 1;
+    pointer-events: none;
+    background: transparent;
+    /* border: orangered 3px solid; */
+    width: 400px;
+    height: 600px;
+    /* transition: opacity 0.3s ease; */
+    background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* 👇 이 두 줄을 추가하세요 */
+
+  transition: opacity 0.4s ease; /* 0.3초 동안 부드럽게 변경 */
+ }
+
+  #character-video img{
+    width: 100%;
+    height: 100vh;
+    height: auto;
+  }
+
+
+
+#character-video[data-state="waiting"] {
+  /* waiting01과 02를 랜덤으로 못하지만, 
+    우선 작동하는 게 중요하니 하나만 지정합니다. 
+  */
+  background-image: url('../modami/gif/waiting01.gif');
+}
+
+#character-video[data-state="talking"] {
+  background-image: url('../modami/gif/talking02.gif');
+}
+
+/* #character-video[data-state="listening"] {
+  background-image: url('../modami/gif/listening01.gif');
+} */
+
+.skipbtn {
+  position: fixed;
+  bottom: 60px;
+  /* right: 92px; */
+  transform: translateX(0%);
+  padding: 10px 32px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: var(--primary--color);
+  border: 2px #6ABEFE solid;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  /* border: none; */
+  border-radius: 100px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.skipbtn p {
+  font-weight: 600;
+  font-size: 28px;
+  margin: 0;
+}
+
