@@ -232,3 +232,23 @@ header {
     position: relative;
 }
 
+#btn-reenter-api {
+    position: absolute;
+    right: 0;
+    font-size: 16px;
+    color: var(--gray600--color);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+       background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--black--color);
+    position: relative;
+}
+
+
