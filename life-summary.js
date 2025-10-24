@@ -19,6 +19,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 모달 페이지로 리다이렉트하거나 안내 메시지 띄워도 됨
     return;
   }
+
+      // 🔹 뒤로가기 버튼 클릭 시 loadmap.html로 이동
+  const btnBack = document.getElementById("btn-back");
+  if (btnBack) {
+    btnBack.addEventListener("click", () => {
+      window.location.href = "roadmap.html";
+    });
+  }
+
 });
 
 document.addEventListener("DOMContentLoaded", async () => {

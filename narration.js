@@ -15,6 +15,15 @@ waitingGif.src = "gif/waiting02.gif";
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🎬 narration.js 시작");
 
+    // 🔹 뒤로가기 버튼 클릭 시 loadmap.html로 이동
+  const btnBack = document.getElementById("btn-back");
+  if (btnBack) {
+    btnBack.addEventListener("click", () => {
+      window.location.href = "roadmap.html";
+    });
+  }
+
+
   // ✅ 오디오 정책 우회 (Chrome autoplay 방지용)
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   document.body.addEventListener("click", () => ctx.resume());

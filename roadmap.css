@@ -131,16 +131,30 @@ header {
 
 
 .road {
-    position: relative;
-    /* ::before 위치의 기준점이 됨 */
-    display: flex;
-    gap: 60px;
-    padding: 0px 90px;
-    align-items: center;
-      overflow-x: auto;
+  position: relative;
+  display: flex;
+  gap: 60px;
+  padding: 0 90px;
+  align-items: center;
+  overflow-x: scroll; /* ✅ auto 대신 scroll로 강제 */
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
-  scroll-behavior: smooth;  
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ✅ macOS에서도 스크롤바를 항상 표시하도록 명시 */
+.road::-webkit-scrollbar {
+  height: 10px;              /* 가로 스크롤바 두께 */
+  background-color: #F1F1F1; /* 스크롤 트랙 배경 */
+}
+
+.road::-webkit-scrollbar-thumb {
+  background-color: #BCE1FC; /* 스크롤바 색 */
+  border-radius: 10px;
+}
+
+.road::-webkit-scrollbar-thumb:hover {
+  background-color: #6ABEFE; /* hover 시 강조색 */
 }
 
 .step {
