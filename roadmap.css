@@ -131,6 +131,7 @@ header {
 
 
 .road {
+  height: auto;
   position: relative;
   display: flex;
   gap: 60px;
@@ -144,6 +145,8 @@ header {
 
 /* ✅ macOS에서도 스크롤바를 항상 표시하도록 명시 */
 .road::-webkit-scrollbar {
+  margin-top: 100px;
+  width: 500px;
   height: 10px;              /* 가로 스크롤바 두께 */
   background-color: #F1F1F1; /* 스크롤 트랙 배경 */
 }

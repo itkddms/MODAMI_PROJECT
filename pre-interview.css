@@ -97,6 +97,24 @@ html, body{
     font-weight: 400;
     line-height: 32px;
 }
+
+.nav a{
+    transform: translateX(-50%);
+    color: var(--gray600--color);
+    font-family: NanumBarunGothicOTF;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px;
+    text-decoration: none;
+}
+
+.roadmap-btn img{
+    width: 36px;
+    height:36px;
+    /* opacity: 80; */
+}
+
 /* 나중에 내비바 변경시 참고 */
 /* .header {
   display: none;
@@ -278,4 +296,35 @@ html, body{
  }
 
 #answer.post-record .next-btn{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+
+
+.map-icon {
+  display: flex;
+  width: 90px;
+  height: 60px;
+  perspective: 300px;
+}
+
+.fold {
+  flex: 1;
+  transform-style: preserve-3d;
+}
+
+.fold.left {
+  background: #BCE1FC;
+  transform: rotateY(10deg);
+}
+.fold.center {
+  background: #6ABEFE;
+}
+.fold.right {
+  background: #A4D4F4;
+  transform: rotateY(-10deg);
+}
+.map-icon {
+  border: 2px solid #3E3E3E;
+  border-radius: 4px;
+  overflow: hidden;
+}
 
