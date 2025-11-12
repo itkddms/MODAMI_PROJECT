@@ -164,7 +164,7 @@ header {
 /* --------------------Main body -------------------- */
 .main_area {
     /* width: 1200px; */
-    margin: 16px auto 0;
+    /* margin: 16px auto 0; */
     padding: 80px 160px; /* <- 상하 80px, 좌우 90px로 변경 */
     /* ... */
     background-color: transparent; 
@@ -252,3 +252,139 @@ header {
 }
 
 
+/* ==================== 반응형======================= */
+
+/* ============================
+   2-프레임 고정 + 선형보간 세팅
+   기준폭: 1194px(태블릿 가로) ↔ 1366px(노트북)
+   ============================ */
+
+:root{
+  /* ▶ 이 2곳 숫자만 바꾸면 전체가 따라옵니다 */
+
+  /* 제목 폰트 */
+  --h1-1194: 68px;   /* tablet(1194) */
+  --h1-1366: 77px;   /* laptop(1366) */
+
+  /* 일러스트 폭 */
+  --art-1194: 562px;
+  --art-1366: 640px;
+
+  /* 텍스트–이미지 간격 */
+  --gap-1194: 0px;
+  --gap-1366: 0px;
+
+  /* 버튼(높이/폰트/위여백) */
+  --btnh-1194: 70px;
+  --btnh-1366: 82px;
+  --btnfs-1194: 28px;
+  --btnfs-1366: 32px;
+  --btnmt-1194: 80px;
+  --btnmt-1366: 90px;
+}
+
+
+/* ===== 실제 적용(공통) ===== */
+/* 고정 패딩/left 제거하고 토큰 기반으로 */
+.main_area{
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);  align-items: center;
+  gap: var(--gap-fluid, var(--gap-1194));
+  padding: clamp(32px, 8vh, 96px) clamp(32px, 8vw, 160px);
+}
+
+.text_box{
+  width: max-content;   /* ← H1(와 버튼) 크기만큼만 차지 */
+  min-width: 0;         /* 기존에 넣었던 min-width:100% 무력화 */
+}   
+
+.text_box h1{
+  font-size: var(--h1-fluid, var(--h1-1194));
+  line-height: 139%;
+  letter-spacing: -0.02em;
+}
+
+.start_btn{
+  width: clamp(240px, 40%, 276px) !important; /* 최소 240, 칼럼의 62%, 최대 420 */
+  margin-top: var(--btnmt-fluid, var(--btnmt-1194));
+  height: var(--btnh-fluid, var(--btnh-1194));
+  padding-inline: clamp(18px, 2.6vw, 20px);
+  font-size: var(--btnfs-fluid, var(--btnfs-1194));
+  border-radius: 16px;
+  min-width: 240px;
+  justify-content: center;
+}
+
+.main_img{
+  position: static !important;
+  left: auto !important; top: auto !important;
+  width: var(--art-1194) !important;   /* ← fluid 대신 1194 변수 직접 사용 */
+  /* max-width: 100%; */
+  height: auto;
+  justify-self: center;
+  display: block;
+}
+
+/* 1194px 구간에서 패딩 과다 축소 */
+@media (min-width: 1194px) and (max-width: 1366px){
+  .main_nav{
+    padding: 0 clamp(32px, 5.5vw, 72px);
+  }
+  .main_area{
+    padding: clamp(28px, 7vh, 64px) clamp(32px, 6vw, 72px);
+    gap: var(--gap-fluid, var(--gap-1194));
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); /* 왼쪽 칸 조금 넓게 */
+  }
+}
+
+/* 1366px 이상: 넓은 화면 튜닝 */
+@media (min-width: 1367px){
+  .main_area{
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--gap-1366);
+    padding: clamp(40px, 8vh, 96px) clamp(48px, 7vw, 160px);
+  }
+.main_img{ width: min(var(--art-1366), 100%) !important; }}
+
+/* ===== 경계 밖 처리 ===== */
+/* 1366 초과: 상한 고정(노트북/데스크탑 동일룩) */
+@media (min-width: 1367px){
+  .text_box h1{ font-size: var(--h1-1366); }
+  .main_img{ width: var(--art-1366); }
+  .main_area{ gap: var(--gap-1366); }
+  .start_btn{
+    height: var(--btnh-1366);
+    font-size: var(--btnfs-1366);
+    margin-top: var(--btnmt-1366);
+  }
+}
+
+/* 1194 미만(태블릿 세로/모바일): 1194 프레임으로 유지되며
+   필요하면 별도 미디어쿼리로 1단 전환만 추가하세요. */
+
+
+/* ==================== 히어로 섹션 높이 세팅 =================== */
+   /* 헤더 높이 토큰 */
+:root { --gnb-h: 100px; } /* header 높이와 동일하게 유지 */
+
+/* 스크롤/뷰포트 기본값 정리 */
+html, body { height: 100%; }
+body{
+  overflow-x: hidden;         /* 가로 스크롤만 막기 */
+  overflow-y: auto;           /* 세로 스크롤 허용 (기존 overflow:hidden 제거 권장) */
+}
+
+/* 히어로 섹션(= .main_area) 높이 = 화면높이 - 헤더 */
+.main_area{
+  min-height: calc(100dvh - var(--gnb-h)); /* 동적 뷰포트: 모바일/태블릿 주소창 변화 대응 */
+  /* fallback (구형 브라우저) */
+  min-height: calc(100vh - var(--gnb-h));
+  align-items: center;         /* 세로 가운데 정렬 */
+  padding-block: clamp(24px, 8vh, 72px); /* 상하 패딩을 높이에 비례 */
+}
+
+/* 이미지가 세로로 넘치지 않게 상한 */
+.main_img{
+  max-height: calc(100dvh - var(--gnb-h) - 2 * 48px); /* 헤더, 상하 패딩을 뺀 높이 안에 */
+  height: auto;
+}

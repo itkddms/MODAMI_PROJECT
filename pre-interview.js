@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ✅ 단계별 화면 설정
     if (stage === 'child') {
         pageTitleEl.textContent = '유아기 (0-12세)';
-        questionTextEl.innerHTML = `${gender}! 유아기 시절에 가장<br />인상 깊었던 일들들을 말씀해 주세요.`;
+        questionTextEl.innerHTML = `${gender}! 유아기 시절에 가장<br/>인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/child_bg.svg';
         heroImageEl.alt = '유아기 일러스트';
         pageTitleEl.style.color = 'black';
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (stage === 'teen') {
         pageTitleEl.textContent = '청소년기 (13-19세)';
-        questionTextEl.innerHTML = `${gender}! 청소년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        questionTextEl.innerHTML = `${gender}! 청소년기 시절에 가장<br/>인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/teen_bg.svg';
         heroImageEl.alt = '청소년기 일러스트';
         pageTitleEl.style.color = 'black';
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (stage === 'adult') {
         pageTitleEl.textContent = '성인기 (20-39세)';
-        questionTextEl.innerHTML = `${gender}! 성인기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        questionTextEl.innerHTML = `${gender}! 성인기 시절에 가장<br/>인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/adult_bg.svg';
         heroImageEl.alt = '성인기 일러스트';
         pageTitleEl.style.color = 'white';
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (stage === 'middle') {
         pageTitleEl.textContent = '중년기 (40-64세)';
-        questionTextEl.innerHTML = `${gender}! 중년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        questionTextEl.innerHTML = `${gender}! 중년기 시절에 가장<br/>인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/middle_bg.svg';
         heroImageEl.alt = '중년기 일러스트';
         pageTitleEl.style.color = 'black';
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (stage === 'senior') {
         pageTitleEl.textContent = '노년기 (65세 이상)';
-        questionTextEl.innerHTML = `${gender}! 노년기 시절에 가장<br />인상 깊었던 일들을 말씀해 주세요.`;
+        questionTextEl.innerHTML = `${gender}! 노년기 시절에 가장<br/>인상 깊었던 일들을 말씀해 주세요.`;
         heroImageEl.src = 'image/senior_bg.svg';
         heroImageEl.alt = '노년기 일러스트';
         pageTitleEl.style.color = 'black';

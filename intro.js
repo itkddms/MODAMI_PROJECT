@@ -122,14 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (recordedText) {
                     const numbers = recordedText.match(/\d+/g);
                     if (numbers) {
-                        const year = numbers[0];
+                        const year = Number(numbers[0]);
                         localStorage.setItem(`recordedText_step${step}`, year);
-                        console.log(`[Step ${step}] 추출된 출생년도 ${year}를 LocalStorage에 저장했습니다.`);
+                        localStorage.setItem("birthYear", year);
+                        console.log(`[Step ${step}] 출생년도 ${year} 저장 완료`);
+
+                        // ✅ 인생 시기 자동 계산
+                        const { stage, age } = classifyLifeStage(year);
+                        localStorage.setItem("calculatedStage", stage);
+                        localStorage.setItem("calculatedAge", age);
+
+                        console.log(`🎯 현재 나이: ${age}세 → 시기: ${stage}`);
                     }
                 }
                 goToStep3();
-            } 
-            
+            }
+
             else if (step === 3) {
                 // 제목 처리
                 if (recordedText) {
@@ -146,6 +154,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     };
+
+    /**********************************************
+ * 📅 출생년도 기반 현재 나이 → 시기 분류 로직
+ **********************************************/
+function classifyLifeStage(birthYear) {
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - birthYear;
+
+    let stage = '';
+    if (age <= 12) stage = 'child';
+    else if (age <= 19) stage = 'teen';
+    else if (age <= 39) stage = 'adult';
+    else if (age <= 64) stage = 'middle';
+    else stage = 'senior';
+
+    return { stage, age };
+}
+
 
     // 각 단계의 녹음 UI에 기능 적용
     setupSpeechRecognition(2, 'answer-step2', 'btn-record-start-step2', 'btn-stop-step2', 'btn-restart-step2', 'btn-next-step2', 'output-text-step2');
