@@ -1,13 +1,6 @@
 /******************************************************
- * ✅ index.js (최종 안정 버전)
+ * ✅ index.js (유연 저장 버전)
  ******************************************************/
-
-// index.html의 '시작하기' 버튼 클릭 시 실행
-function saveStartData() {
-  localStorage.setItem('isStarted', 'true');
-  localStorage.setItem('userName', '김모담');
-  console.log('데이터가 로컬스토리지에 저장되었습니다!');
-}
 
 /******************************************************
  * roadmap.html 페이지 로드 시
@@ -22,13 +15,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ✅ API 키 자동 체크 — 없을 때만 모달 표시
+  // ✅ API 키 자동 체크 — 둘 다 없을 때만 모달 표시
   const gptKey = localStorage.getItem("OPENAI_API_KEY");
   const ttsKey = localStorage.getItem("GOOGLE_TTS_KEY");
-  if (!gptKey || !ttsKey) {
-    showApiKeyModal(); // 하나라도 없으면 모달 표시
+  if (!gptKey && !ttsKey) {
+    showApiKeyModal();
   } else {
-    console.log("✅ 이미 API 키가 설정되어 있습니다.");
+    console.log("✅ 최소 1개 이상의 키가 설정되어 있습니다.");
+  }
+
+  // ✅ 입력 중 자동 임시 저장(선택) — 존재할 때만 바인딩
+  const gptInput = document.getElementById("gptKeyInput");
+  const ttsInput = document.getElementById("ttsKeyInput");
+  if (gptInput) {
+    gptInput.value = gptKey || "";
+    gptInput.addEventListener("input", (e) => {
+      // 빈 값도 저장 허용(요청사항)
+      localStorage.setItem("OPENAI_API_KEY", e.target.value);
+    });
+  }
+  if (ttsInput) {
+    ttsInput.value = ttsKey || "";
+    ttsInput.addEventListener("input", (e) => {
+      localStorage.setItem("GOOGLE_TTS_KEY", e.target.value);
+    });
+  }
+
+  // 버튼/핫키 바인딩(안전)
+  const resetBtn = document.getElementById("btn-reset");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      if (confirm("정말 모든 데이터를 삭제하고 처음부터 다시 시작하시겠습니까?")) {
+        resetModamiData();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key === "R") {
+      resetModamiData();
+    }
+  });
+
+  const reenterBtn = document.getElementById("btn-reenter-api");
+  if (reenterBtn) {
+    reenterBtn.addEventListener("click", () => {
+      resetApiKeyOnly();
+    });
+  }
+
+  const closeBtn = document.getElementById("closeModalBtn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => hideApiKeyModal());
+  }
+
+  const saveBtn = document.getElementById("saveKeysBtn");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      // ✅ 둘 다 비어도 저장/진행 가능 — 입력된 것만 개별 반영
+      const gptVal = (document.getElementById("gptKeyInput")?.value ?? "").trim();
+      const ttsVal = (document.getElementById("ttsKeyInput")?.value ?? "").trim();
+
+      // 빈 값도 그대로 저장(요청사항: “없어도 저장”)
+      localStorage.setItem("OPENAI_API_KEY", gptVal);
+      localStorage.setItem("GOOGLE_TTS_KEY", ttsVal);
+
+      alert("✅ 입력하신 값으로 저장했습니다. (빈 값도 저장됨)");
+      hideApiKeyModal();
+    });
+  }
+
+  // ✅ “건너뛰기” 버튼이 있다면 지원(선택)
+  const skipBtn = document.getElementById("skipKeysBtn");
+  if (skipBtn) {
+    skipBtn.addEventListener("click", () => {
+      // 저장 없이 그냥 닫기
+      hideApiKeyModal();
+    });
   }
 });
 
@@ -56,7 +119,7 @@ function resetModamiData() {
   });
 
   alert("모든 데이터가 초기화되었습니다. (API 키 포함)");
-  window.location.href = "index.html"; // 첫 화면으로 이동
+  window.location.href = "index.html";
 }
 
 /******************************************************
@@ -70,7 +133,7 @@ function resetApiKeyOnly() {
 }
 
 /******************************************************
- * 모달 표시 함수
+ * 모달 표시/숨김
  ******************************************************/
 function showApiKeyModal() {
   const modal = document.getElementById('apiKeyModal');
@@ -80,53 +143,9 @@ function showApiKeyModal() {
     console.warn("⚠️ apiKeyModal 요소를 찾을 수 없습니다.");
   }
 }
-
 function hideApiKeyModal() {
   const modal = document.getElementById('apiKeyModal');
   if (modal) {
     modal.style.display = 'none';
   }
 }
-
-document.getElementById("closeModalBtn").addEventListener("click", () => {
-  hideApiKeyModal();
-});
-
-
-
-/******************************************************
- * 이벤트 바인딩
- ******************************************************/
-document.getElementById("btn-reset").addEventListener("click", () => {
-  if (confirm("정말 모든 데이터를 삭제하고 처음부터 다시 시작하시겠습니까?")) {
-    resetModamiData();
-  }
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && e.key === "R") {
-    resetModamiData();
-  }
-});
-
-const reenterBtn = document.getElementById("btn-reenter-api");
-if (reenterBtn) {
-  reenterBtn.addEventListener("click", () => {
-    resetApiKeyOnly(); // ✅ “API 키 다시 입력하기” 버튼 클릭 시 동작
-  });
-}
-
-document.getElementById("saveKeysBtn").addEventListener("click", () => {
-  const gptKey = document.getElementById("gptKeyInput").value.trim();
-  const ttsKey = document.getElementById("ttsKeyInput").value.trim();
-
-  if (!gptKey || !ttsKey) {
-    alert("두 키를 모두 입력해주세요!");
-    return;
-  }
-
-  localStorage.setItem("OPENAI_API_KEY", gptKey);
-  localStorage.setItem("GOOGLE_TTS_KEY", ttsKey);
-  alert("✅ API 키가 저장되었습니다.");
-  hideApiKeyModal();
-});
