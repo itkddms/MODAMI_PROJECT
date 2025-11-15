@@ -262,16 +262,15 @@ button {
 */
 
 @media (min-width: 1194px) and (max-width: 1366px){
+  .main_nav{
+    padding: 0 clamp(32px, 5.5vw, 72px);
+  }
+  .main_area{
+    padding: clamp(28px, 7vh, 64px) clamp(32px, 6vw, 72px);
+    gap: var(--gap-fluid, var(--gap-1194));
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); /* 왼쪽 칸 조금 넓게 */
+  }
   .name {
-    bottom: 166px;
+    bottom: 186px;
   }
-  .skipbtn{
-    bottom: 300px;
-  }
-  #character-video {
-    width: 400px;
-    height: 620px;
-    bottom: 70px;
-  }
-
 }
