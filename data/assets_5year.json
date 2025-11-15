@@ -1,7 +1,7 @@
 {
   "1950": {
     "music": "sound/1950.mp3",
-    "image": "image/1950_bg.svg",
+    "image": "image/1950.svg",
     "text": "BGM - 굳세어라 금순아 (1953) / 현인"
   },
   "1955": {
@@ -11,57 +11,57 @@
   },
   "1960": {
     "music": "sound/1960.mp3",
-    "image": "image/1960_bg.svg",
+    "image": "image/1960.svg",
     "text": "BGM - 하숙생 (1964) / 최희준"
   },
   "1965": {
     "music": "sound/1965.mp3",
-    "image": "image/1965_bg.svg",
-    "text": "BGM - 아침이슬 (1971) / 양희은"
+    "image": "image/1965.svg",
+    "text": "BGM - 아침이슬 (1971) / 김민기"
   },
   "1970": {
     "music": "sound/1971.mp3",
-    "image": "image/1970_bg.svg",
-    "text": "BGM - 사랑으로 (1979) / 해바라기"
+    "image": "image/1970.svg",
+    "text": "BGM - 미인 (1974) / 신중현과 엽전들의 미인"
   },
   "1975": {
     "music": "sound/1975.mp3",
-    "image": "image/1975_bg.svg",
-    "text": "BGM - 가로수 그늘 아래 서면 (1988) / 이문세"
+    "image": "image/1975.svg",
+    "text": "BGM - 단발머리 (1979) / 조용필"
   },
   "1980": {
     "music": "sound/1980.mp3",
-    "image": "image/1980_bg.svg",
-    "text": "BGM - 사랑했지만 (1989) / 김광석"
+    "image": "image/1980.svg",
+    "text": "BGM - 고추잠자리 (1981) / 조용필"
   },
   "1990": {
     "music": "sound/1990.mp3",
-    "image": "image/1990_bg.svg",
-    "text": "BGM - 거짓말 (2000) / GOD"
+    "image": "image/1990.svg",
+    "text": "BGM - 잘못된 만남 (1995) / 김건모"
   },
   "2000": {
     "music": "sound/2000.mp3",
-    "image": "image/2000_bg.svg",
-    "text": "BGM - 사랑합니다 (2003) / 팀"
+    "image": "image/2000.svg",
+    "text": "BGM - 거짓말 (2000) / GOD"
   },
   "2005": {
     "music": "sound/2005.mp3",
-    "image": "image/2005_bg.svg",
-    "text": "BGM - 사랑 두려움 (2007) / 박효신"
+    "image": "image/2005.svg",
+    "text": "BGM - Tell me (2007) / 원더걸스"
   },
   "2010": {
     "music": "sound/2010.mp3",
-    "image": "image/2010_bg.svg",
+    "image": "image/2010.svg",
     "text": "BGM - 너랑 나 (2011) / 아이유"
   },
   "2015": {
     "music": "sound/2015.mp3",
-    "image": "image/2015_bg.svg",
+    "image": "image/2015.svg",
     "text": "BGM - 봄날 (2017) / 방탄소년단"
   },
   "2020": {
     "music": "sound/2020.mp3",
-    "image": "image/2020_bg.svg",
-    "text": "BGM - 테스형! (2020) / 나훈아"
+    "image": "image/2020.svg",
+    "text": "BGM - 찐이야 (2020) / 영탁"
   }
 }
