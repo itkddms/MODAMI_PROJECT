@@ -491,8 +491,18 @@ btnRestart.addEventListener("click", () => {
   if (guideEl) {
     guideEl.style.opacity = 1;
   }
+
+  // 5. 캐릭터는 대기 상태로
   pauseCharacter();
+
+  // 6. 🔥 공감문 대신 "원래 질문" 다시 보여주기 (TTS/타닥 효과 없음)
+  if (followupItems.length > 0 && followupItems[currentQuestionIdx]) {
+    const cur = followupItems[currentQuestionIdx];
+    // 그냥 텍스트만 바로 넣기 (typeWriter 사용 X)
+    questionTextEl.innerHTML = cur.question;
+  }
 });
+
 
 /*********************
  * 💬 GPT 공감문 생성
@@ -636,56 +646,52 @@ function renderQuestion() {
   const cur = followupItems[currentQuestionIdx];
   if (!cur) return;
 
-  // 🔹 이전 버튼 표시/비표시
+  // 이전 버튼
   if (currentQuestionIdx === 0) {
     btnPrev.classList.add("hidden");
   } else {
     btnPrev.classList.remove("hidden");
   }
 
-  // 🎯 질문 및 진행률 갱신 (+ TTS/타닥타닥)
-  setTimeout(() => {
-    // 1) 질문 텍스트 & 진행률 표시
-    questionTextEl.innerHTML = cur.question;
-    progressEl.innerHTML = `<span class="current">${currentQuestionIdx + 1}</span>/<span class="total">${followupItems.length}</span>`;
+  // 캐릭터는 기본 대기 상태로
+  pauseCharacter();
 
-    // 2) TTS 스크립트 결정
-    //    - 첫 질문: TTS 끄고(=null) 타닥타닥만
-    //    - 이후 질문: TTS + 타닥타닥
+  setTimeout(() => {
+    questionTextEl.innerHTML = cur.question;
+    progressEl.innerHTML =
+      `<span class="current">${currentQuestionIdx + 1}</span>` +
+      `/` +
+      `<span class="total">${followupItems.length}</span>`;
+
+    // 🔹 첫 질문: TTS 끄고(=null) 타닥타닥만
+    // 🔹 이후 질문: TTS + 타닥타닥
     const ttsScript = currentQuestionIdx === 0 ? null : cur.question;
 
-    // 3) 질문 읽어주기
     typeWriter(questionTextEl, cur.question, ttsScript);
 
-    // ===========================
-    // 🧹 UI 초기화
-    // ===========================
+    // === UI 초기화 ===
     recognizing = false;
     finalBuf = "";
     lastInterim = "";
     outEl.textContent = "";
 
-    guideEl.style.opacity = 1; // “아래 버튼을 클릭 후...” 보이기
+    guideEl.style.opacity = 1;
     answerEl.classList.remove("post-record", "is-recording", "show-output");
     btnStart.disabled = false;
     btnStop.disabled = true;
 
-    // 다음 버튼 텍스트
     const nextTextEl = btnNext.querySelector(".btn-next-text");
     if (nextTextEl) {
-      if (currentQuestionIdx === followupItems.length - 1) {
-        nextTextEl.textContent = "완료";
-      } else {
-        nextTextEl.textContent = "다음";
-      }
+      nextTextEl.textContent =
+        currentQuestionIdx === followupItems.length - 1 ? "완료" : "다음";
     }
 
-    // 👂 답변 영역 상태 초기화
     if (!answerEl.classList.contains("show-output")) {
       answerEl.classList.add("ready");
     }
   }, 200);
 }
+
 
 
 
