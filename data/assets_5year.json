@@ -37,6 +37,11 @@
   "1990": {
     "music": "sound/1990.mp3",
     "image": "image/1990.svg",
+    "text": "BGM - 난 알아요 (1992) / 서태지와 아이들"
+  },
+    "1995": {
+    "music": "sound/1995.mp3",
+    "image": "image/1995.svg",
     "text": "BGM - 잘못된 만남 (1995) / 김건모"
   },
   "2000": {
