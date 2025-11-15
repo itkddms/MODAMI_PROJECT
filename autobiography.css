@@ -80,7 +80,7 @@ html, body{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 300px;
+    padding: 0 90px;
     z-index: 10;
 }
 
