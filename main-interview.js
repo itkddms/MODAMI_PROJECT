@@ -240,6 +240,9 @@ function pauseCharacter() {
 /*********************
  * 🔊 TTS (narration.js 참고)
  *********************/
+let currentTtsAudio = null;  
+
+
 async function getTtsAudio(textScript) {
   if (!textScript) return null;
 
@@ -295,8 +298,9 @@ async function getTtsAudio(textScript) {
 /*********************
  * ⌨️ 타닥타닥 효과 (성능 문제로 타이핑 효과 제거 버전)
  *********************/
+
 /*********************
- * ⌨️ 타닥타닥 효과 (CPU 부담 완화 버전)
+ * ⌨️ 타닥타닥 효과 (CPU 부담 완화 + TTS 연동 버전)
  *********************/
 async function typeWriter(el, text, ttsScript) {
   if (!el || !text) return;
@@ -305,7 +309,7 @@ async function typeWriter(el, text, ttsScript) {
 
   const audioData = await getTtsAudio(ttsScript); 
   if (!audioData) { 
-    // TTS 없는 경우 (타이핑만)
+    // 🔹 TTS 없는 경우 (타이핑만)
     let i = 0;
     const typingSpeed = 40;
     const interval = setInterval(() => {
@@ -316,34 +320,45 @@ async function typeWriter(el, text, ttsScript) {
     return;
   }
 
-  // --- TTS가 있는 경우 (여기부터가 중요) ---
+  // --- 🔊 TTS가 있는 경우 (여기부터가 중요) ---
   const { audio, duration } = audioData;
+
+  // ✅ 현재 재생 중인 TTS 오디오 전역에 저장
+  currentTtsAudio = audio;
 
   audio.addEventListener("ended", () => {
     console.log("⏹ 오디오 종료 - waiting으로 복귀");
     pauseCharacter();
+    // 🔹 재생 끝났으니 전역 참조도 정리
+    currentTtsAudio = null;
   });
 
   console.log("▶️ 오디오 재생 *요청* - talking으로 전환");
   setCharacterState("talking"); 
   audio.play().catch(e => console.error("TTS 재생 실패:", e));
 
-  const pureText = text.replace(/<br>/g, "\n").replace(/<[^>]*>/g, "").trim();
+  const pureText = text
+    .replace(/<br>/g, "\n")
+    .replace(/<[^>]*>/g, "")
+    .trim();
+
   const totalChars = pureText.length;
   let typed = 0, idx = 0;
 
-  // ----------------------------------------------------
-  // 💡 [수정] 인터벌을 100ms(0.1초)로 늘려서 CPU에 숨 쉴 틈을 줍니다.
-  // ----------------------------------------------------
+  // ⏱ 인터벌을 100ms로 설정 (CPU 부담 완화)
   const typingInterval = setInterval(() => {
-    if (audio.ended) {
+    // 오디오가 이미 끝났거나 강제로 멈춘 경우
+    if (audio.ended || audio.paused) {
       clearInterval(typingInterval);
       el.innerHTML = text; 
       return;
     }
 
     const elapsed = audio.currentTime;
-    const targetChars = Math.min(totalChars, Math.floor(elapsed * (totalChars / duration)));
+    const targetChars = Math.min(
+      totalChars,
+      Math.floor(elapsed * (totalChars / duration))
+    );
 
     while (typed < targetChars && idx < text.length) {
       const char = text.charAt(idx);
@@ -358,9 +373,9 @@ async function typeWriter(el, text, ttsScript) {
     
     el.innerHTML = text.substring(0, idx);
 
-  }, 100); // 💡 50ms에서 100ms (0.1초)로 변경
-  // ----------------------------------------------------
+  }, 100);
 }
+
 
 
 
@@ -475,6 +490,18 @@ btnStop.addEventListener("click", () => {
  * @description 처음부터 다시 말하기 버튼 클릭 시
  */
 btnRestart.addEventListener("click", () => {
+  // 0. 🔇 공감 TTS가 재생 중이면 즉시 멈추기
+  if (currentTtsAudio) {
+    try {
+      currentTtsAudio.pause();
+      currentTtsAudio.currentTime = 0;
+    } catch (e) {
+      console.warn("TTS 정지 중 오류:", e);
+    } finally {
+      currentTtsAudio = null;
+    }
+  }
+
   // 1. 모든 텍스트 버퍼와 화면 출력 내용 초기화
   finalBuf = "";
   lastInterim = "";
@@ -487,7 +514,7 @@ btnRestart.addEventListener("click", () => {
   btnStart.disabled = false;
   btnStop.disabled = true;
 
-  // 4. (필요 시) 가이드 메시지를 다시 보여주기
+  // 4. 가이드 메시지를 다시 보여주기
   if (guideEl) {
     guideEl.style.opacity = 1;
   }
@@ -495,10 +522,11 @@ btnRestart.addEventListener("click", () => {
   // 5. 캐릭터는 대기 상태로
   pauseCharacter();
 
-  // 6. 🔥 공감문 대신 "원래 질문" 다시 보여주기 (TTS/타닥 효과 없음)
-  if (followupItems.length > 0 && followupItems[currentQuestionIdx]) {
+  // 6. 🧠 현재 질문 다시 보여주기 (공감문 대신)
+  //    - followupItems / currentQuestionIdx는 이미 질문 진행에 쓰고 있음
+  if (Array.isArray(followupItems) && followupItems[currentQuestionIdx]) {
     const cur = followupItems[currentQuestionIdx];
-    // 그냥 텍스트만 바로 넣기 (typeWriter 사용 X)
+    // ❗ 여기서는 TTS/타닥 효과 없이 그냥 텍스트만
     questionTextEl.innerHTML = cur.question;
   }
 });
