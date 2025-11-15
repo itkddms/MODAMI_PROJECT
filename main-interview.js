@@ -389,6 +389,9 @@ if (recognition) {
     lastInterim = interim;
     outEl.textContent = (finalBuf + " " + interim).trim();
     if (outEl.textContent) answerEl.classList.add("show-output");
+
+    // ✅ 전사 내용 자동 스크롤
+  outEl.scrollTop = outEl.scrollHeight;
   };
 
 recognition.onend = async () => {
@@ -412,6 +415,8 @@ recognition.onend = async () => {
     }, 1500);
   }
 };
+
+outEl.scrollTop = outEl.scrollHeight;
 
 };
 
