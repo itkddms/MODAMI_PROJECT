@@ -273,4 +273,14 @@ button {
   .name {
     bottom: 186px;
   }
+  .skipbtn{
+    bottom: 300px;
+  }
+  #character-video {
+    width: 400px;  /* 🚩 예: 400px -> 350px (더 작게) */
+    height: 620px; /* 🚩 예: 620px -> 541px (비율 맞춤) */
+    bottom: 70px;
+  }
+
 }
+
