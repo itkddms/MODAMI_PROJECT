@@ -632,11 +632,16 @@ if (currentQuestionIdx === 0) {
 
 
   // 🎯 질문 및 진행률 갱신
-  setTimeout(() => {
-    questionTextEl.innerHTML = cur.question;
-    progressEl.innerHTML = `<span class="current">${currentQuestionIdx + 1}</span>/<span class="total">${followupItems.length}</span>`;
-    typeWriter(questionTextEl, cur.question, cur.question);
-  }, 200);
+setTimeout(() => {
+  questionTextEl.innerHTML = cur.question;
+  progressEl.innerHTML = `<span class="current">${currentQuestionIdx + 1}</span>/<span class="total">${followupItems.length}</span>`;
+
+  // 🔹 첫 질문이면: TTS 끄고(=null) 텍스트만 타닥타닥
+  // 🔹 두 번째 질문부터: 기존처럼 TTS + 타이핑
+  const ttsScript = currentQuestionIdx === 0 ? null : cur.question;
+
+  typeWriter(questionTextEl, cur.question, ttsScript);
+}, 200);
 
   // ===========================
   // 🧹 [UI 초기화 구간 추가]
