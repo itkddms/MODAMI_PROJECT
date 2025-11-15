@@ -498,41 +498,57 @@ btnRestart.addEventListener("click", () => {
  * 💬 GPT 공감문 생성
  *********************/
 async function generateEmpathy(answerText) {
-  // if (window.APP_MODE?.MOCK || !window.APP_MODE?.GPT) {
-  //   console.log("💬 [MOCK GPT] 공감문 생성 생략:", answerText);
-  //   const mockReplies = [
-  //     "좋은 이야기네요!",
-  //     "그 감정이 전해져요.",
-  //     "참 따뜻한 기억이에요."
-  //   ];
-  //   return mockReplies[Math.floor(Math.random() * mockReplies.length)];
-  // }
-
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          { role: "system", content: "너는 따뜻하고 공감력 있는 인터뷰어야. 아주 짧게 한두 문장으로 대답해." },
-          { role: "user", content: `너는 따뜻하고 공감력 있는 인터뷰어야. 아주 짧게 한 문장(20자)으로 대답해.
-존댓말을 사용하고, 평가·조언·설명은 하지 않는다. 감탄사 남용을 피한다.
-출력은 텍스트 한 줄만 반환한다. 오류 시 "말씀 감사해요."를 반환한다.: ${answerText}` }
+          {
+            role: "system",
+            content: `
+당신은 노년층의 이야기를 들어주는 따뜻한 한국어 인터뷰어입니다.
+당신의 역할은 사용자의 기억과 감정을 존중하고, 아주 짧은 한 마디로 공감해 주는 것입니다.
+          `.trim(),
+          },
+          {
+            role: "user",
+            content: `
+다음 사용자의 이야기를 듣고 공감의 한 마디를 해 주세요.
+
+[지침]
+- 먼저 사용자의 말에서 핵심 감정(예: 기쁨, 그리움, 아쉬움, 고마움, 뿌듯함, 외로움 등)을 하나 떠올립니다.
+- 그 감정을 살짝 드러내면서, 사용자가 말한 내용 중 하나의 구체적인 장면/요소를 짧게 짚어 줍니다.
+  (예: "친구와 놀던 시간이 참 소중하셨겠어요.", "시장에 가시던 기억이 많이 남으셨나 봐요.")
+- 한 문장, 20~35자 정도의 자연스러운 존댓말로 대답합니다.
+- 조언, 평가, 분석, 요약을 하지 않습니다.
+- "정말", "너무" 같은 감탄사는 남용하지 않습니다.
+- 결과는 문장 하나만 출력하고, 설명이나 따옴표는 붙이지 않습니다.
+- 만약 적절한 답변을 만들기 어렵다면 "말씀 감사해요." 한 문장만 말합니다.
+
+[사용자의 이야기]
+${answerText}
+          `.trim(),
+          },
         ],
-        temperature: 0.8
-      })
+        temperature: 0.7,
+      }),
     });
+
     const data = await res.json();
-    return data.choices?.[0]?.message?.content?.trim() || "정말 좋은 이야기예요.";
+    return (
+      data.choices?.[0]?.message?.content?.trim() || "말씀 감사해요."
+    );
   } catch (e) {
     console.error("GPT 공감 오류:", e);
-    return "정말 좋은 이야기예요.";
+    return "말씀 감사해요.";
   }
 }
+
 
 /*********************
  * 🔹 질문 렌더링 + 진행
@@ -620,63 +636,57 @@ function renderQuestion() {
   const cur = followupItems[currentQuestionIdx];
   if (!cur) return;
 
-  // 🎞️ 캐릭터 상태 talking
-  // setCharacterState("talking");
-
-
-if (currentQuestionIdx === 0) {
-  btnPrev.classList.add("hidden");
-} else {
-  btnPrev.classList.remove("hidden");
-}
-
-
-  // 🎯 질문 및 진행률 갱신
-setTimeout(() => {
-  questionTextEl.innerHTML = cur.question;
-  progressEl.innerHTML = `<span class="current">${currentQuestionIdx + 1}</span>/<span class="total">${followupItems.length}</span>`;
-
-  // 🔹 첫 질문이면: TTS 끄고(=null) 텍스트만 타닥타닥
-  // 🔹 두 번째 질문부터: 기존처럼 TTS + 타이핑
-  const ttsScript = currentQuestionIdx === 0 ? null : cur.question;
-
-  typeWriter(questionTextEl, cur.question, ttsScript);
-}, 200);
-
-  // ===========================
-  // 🧹 [UI 초기화 구간 추가]
-  // ===========================
-  // 녹음 상태 리셋
-  recognizing = false;
-  finalBuf = "";
-  lastInterim = "";
-  outEl.textContent = "";
-
-  // 안내문 & 버튼 복원
-  guideEl.style.opacity = 1; // “아래 버튼을 클릭 후...” 보이기
-  answerEl.classList.remove("post-record", "is-recording", "show-output");
-  btnStart.disabled = false;
-  btnStop.disabled = true;
-
-
-  // 다음 버튼 텍스트
-const nextTextEl = btnNext.querySelector(".btn-next-text");
-if (nextTextEl) {
-  if (currentQuestionIdx === followupItems.length - 1) {
-    nextTextEl.textContent = "완료";
+  // 🔹 이전 버튼 표시/비표시
+  if (currentQuestionIdx === 0) {
+    btnPrev.classList.add("hidden");
   } else {
-    nextTextEl.textContent = "다음";
+    btnPrev.classList.remove("hidden");
   }
+
+  // 🎯 질문 및 진행률 갱신 (+ TTS/타닥타닥)
+  setTimeout(() => {
+    // 1) 질문 텍스트 & 진행률 표시
+    questionTextEl.innerHTML = cur.question;
+    progressEl.innerHTML = `<span class="current">${currentQuestionIdx + 1}</span>/<span class="total">${followupItems.length}</span>`;
+
+    // 2) TTS 스크립트 결정
+    //    - 첫 질문: TTS 끄고(=null) 타닥타닥만
+    //    - 이후 질문: TTS + 타닥타닥
+    const ttsScript = currentQuestionIdx === 0 ? null : cur.question;
+
+    // 3) 질문 읽어주기
+    typeWriter(questionTextEl, cur.question, ttsScript);
+
+    // ===========================
+    // 🧹 UI 초기화
+    // ===========================
+    recognizing = false;
+    finalBuf = "";
+    lastInterim = "";
+    outEl.textContent = "";
+
+    guideEl.style.opacity = 1; // “아래 버튼을 클릭 후...” 보이기
+    answerEl.classList.remove("post-record", "is-recording", "show-output");
+    btnStart.disabled = false;
+    btnStop.disabled = true;
+
+    // 다음 버튼 텍스트
+    const nextTextEl = btnNext.querySelector(".btn-next-text");
+    if (nextTextEl) {
+      if (currentQuestionIdx === followupItems.length - 1) {
+        nextTextEl.textContent = "완료";
+      } else {
+        nextTextEl.textContent = "다음";
+      }
+    }
+
+    // 👂 답변 영역 상태 초기화
+    if (!answerEl.classList.contains("show-output")) {
+      answerEl.classList.add("ready");
+    }
+  }, 200);
 }
 
-  // ===========================
-  // 👂 마이크 / 안내문 다시 표시
-  // ===========================
-  // "아래 버튼을 클릭 후..." 보이도록
-  if (!answerEl.classList.contains("show-output")) {
-    answerEl.classList.add("ready");
-  }
-}
 
 
 
