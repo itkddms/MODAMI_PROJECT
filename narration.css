@@ -263,14 +263,14 @@ button {
 
 @media (min-width: 1194px) and (max-width: 1366px){
   .name {
-    bottom: 186px;
+    bottom: 166px;
   }
   .skipbtn{
     bottom: 300px;
   }
   #character-video {
-    width: 400px;  /* 🚩 예: 400px -> 350px (더 작게) */
-    height: 620px; /* 🚩 예: 620px -> 541px (비율 맞춤) */
+    width: 400px;
+    height: 620px;
     bottom: 70px;
   }
 
