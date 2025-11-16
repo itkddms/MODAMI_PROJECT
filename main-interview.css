@@ -144,7 +144,7 @@ html, body{
 
 .interview-sheet {
     width: 100%;
-    height: calc(100% - 75px);
+    height: calc(100% - 80px);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -180,7 +180,7 @@ html, body{
     border-radius: 100px 100px 0 0;
     box-shadow: 0 -6px 23.4px 4px rgba(106, 190, 254, 0.05);
     background-color: var(--white--color);
-    transform: translateY(-25px);
+    transform: translateY(-20px);
 }
 
 /* 인터뷰 진행 번호 (예: 1/5) */
