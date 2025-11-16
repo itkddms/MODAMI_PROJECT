@@ -148,7 +148,7 @@ html, body{
 
 .interview-sheet {
     width: 100%;
-    height: calc(100% - 100px);
+    height: calc(100% - 70px);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -181,7 +181,7 @@ html, body{
     border-radius: 100px 100px 0 0;
     box-shadow: 0 -6px 23.4px 4px rgba(106, 190, 254, 0.05);
     background-color: var(--white--color);
-    transform: translateY(-20px);
+    transform: translateY(-30px);
 }
 
 .answer-display {
