@@ -246,8 +246,8 @@ button {
     pointer-events: none;
     background: transparent;
     /* border: orangered 3px solid; */
-    width: 400px;
-    height: 640px;
+    width: 380px;
+    height: 620px;
     transition: opacity 0.3s ease;
      transform: scaleX(-1);
  }
