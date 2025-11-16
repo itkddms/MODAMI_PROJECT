@@ -144,7 +144,7 @@ html, body{
 
 .interview-sheet {
     width: 100%;
-    height: calc(100% - 100px);
+    height: calc(100% - 75px);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -174,14 +174,13 @@ html, body{
 .interview-answer {
     width: 100%;
     height: 100vh;
-    /* margin-bottom: 40px; */
     display: flex;
     flex-direction: column;
     align-items: center;
     border-radius: 100px 100px 0 0;
     box-shadow: 0 -6px 23.4px 4px rgba(106, 190, 254, 0.05);
-    /* gap: 20px; */
     background-color: var(--white--color);
+    transform: translateY(-25px);
 }
 
 /* 인터뷰 진행 번호 (예: 1/5) */
@@ -379,7 +378,7 @@ html, body{
 
  #character-video {
     position: absolute;
-    top: 60px;
+    top: 55px;
     right: 30px;
     z-index: 3;
     opacity: 1;
