@@ -214,43 +214,32 @@ header {
 
 
 #btn-reset {
-    position: absolute;
-    right: 0;
-    font-size: 16px;
-    color: var(--gray600--color);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s;
-       background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    padding: 8px 12px;
-    text-decoration: none;
-    color: var(--black--color);
-    position: relative;
+  position: absolute;
+  right: 160px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+
+  font-size: 24px;
+  color: var(--black--color);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 8px 12px;
+  text-decoration: none;
 }
 
 #btn-reenter-api {
-    position: absolute;
-    right: 0;
-    font-size: 16px;
-    color: var(--gray600--color);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s;
-       background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    padding: 8px 12px;
-    text-decoration: none;
-    color: var(--black--color);
-    position: relative;
+  font-size: 24px;
+  color: var(--black--color);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 8px 12px;
+  text-decoration: none;
+  vertical-align: middle;
 }
-
 
 /* ==================== 반응형======================= */
 
