@@ -239,15 +239,15 @@ button {
     position: absolute;
     position: fixed;
     left: 80px;
-   bottom: 70px;
+   bottom: 55px;
   /* transform: translateX(-50%); */
     z-index: 0;
     opacity: 1;
     pointer-events: none;
     background: transparent;
     /* border: orangered 3px solid; */
-    width: 440px;
-    height: 680px;
+    width: 400px;
+    height: 640px;
     transition: opacity 0.3s ease;
      transform: scaleX(-1);
  }
