@@ -110,8 +110,8 @@ header {
 .roadmap_main h1 {
     font-size: 48px;
     color: var(--black--color);
-    margin: 68px 90px;
-    line-height: 140%;
+    margin: 48px 90px;
+    line-height: 130%;
 
     /* 스크롤바 숨기기 */
     -ms-overflow-style: none;
@@ -161,8 +161,8 @@ header {
 }
 
 .step {
-    width: 348px;
-    height: 418px;
+    width: 328px;
+    height: 398px;
     flex-shrink: 0;
     background-color: var(--white--color);
     border-radius: 40px;
