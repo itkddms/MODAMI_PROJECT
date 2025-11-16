@@ -162,7 +162,7 @@ header {
 
 .step {
     width: 328px;
-    height: 398px;
+    height: 408px;
     flex-shrink: 0;
     background-color: var(--white--color);
     border-radius: 40px;
