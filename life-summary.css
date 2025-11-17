@@ -128,7 +128,7 @@ html, body{
 #story-summary {
   width: 100%;
   height: auto;
-  margin-top: 50px;
+  margin-top: 30px;
   padding: 0 90px;          /* 좌우 여백 담당 */
   box-sizing: border-box;   /* 패딩 포함 */
   display: flex;
@@ -151,7 +151,7 @@ html, body{
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    margin-top: 36px;
+    margin-top: 25px;
     font-weight: 600;
     font-size: 28px;
     color: var(--white--color);
