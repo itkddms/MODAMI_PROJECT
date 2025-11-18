@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>자서전 PDF 인쇄</title>
+
+  <!-- 기존 자서전 CSS 그대로 써도 되고, 필요하면 print용 css 하나 더 -->
+  <link rel="stylesheet" href="autobiography.css" />
+
+  <style>
+    /* 인쇄 전용 페이지에서 화면에 보이는 레이아웃 (미리보기용) */
+    body {
+      margin: 0;
+      background: #f3f3f3;
+      font-family: 'Kim jung chul Myungjo', serif;
+    }
+
+    .print-root {
+      max-width: 1200px;
+      margin: 24px auto;
+      background: #fff;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .spread-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      page-break-after: always;
+    }
+
+    .spread-wrapper .page {
+      width: 48%;
+      box-sizing: border-box;
+    }
+
+    .content-label p {
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #666;
+    }
+
+    .content-label h1 {
+      font-size: 20px;
+      margin: 0 0 16px;
+    }
+
+    .story-text {
+      font-size: 16px;
+      line-height: 1.8;
+      text-align: justify;
+      white-space: pre-wrap;
+    }
+
+    .bottom-line {
+      margin-top: 16px;
+      border-top: 1px solid #ccc;
+    }
+
+    /* 인쇄 설정 */
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .print-root {
+        margin: 0;
+        padding: 15mm;
+        max-width: none;
+      }
+
+      .spread-wrapper {
+        page-break-after: always;
+      }
+
+      @page {
+        size: A4 landscape;
+        margin: 15mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-root">
+    <h1 style="font-size:22px; margin-bottom:4px;" id="print-title"></h1>
+    <p style="margin:0 0 24px; color:#777;" id="print-date"></p>
+
+    <div id="print-container">
+      <!-- JS에서 모든 spread를 여기 안에 렌더링 -->
+    </div>
+  </div>
+
+  <script src="autobio-print.js"></script>
+</body>
+</html>

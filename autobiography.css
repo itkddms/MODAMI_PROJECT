@@ -82,6 +82,8 @@ html, body{
     justify-content: space-between;
     padding: 0 90px;
     z-index: 10;
+    border-bottom: 2px solid var(--gray200--color);
+
 }
 
 #btn-back{
@@ -127,7 +129,7 @@ html, body{
 
 #btn-edit{
     display: flex;
-    width: 140px;
+    width: 144px;
     height: 56px;
     padding: 9px 36px;
     flex-direction: column;
@@ -263,7 +265,7 @@ html, body{
 
 .spread-wrapper {
   width: 100%;
-  padding: 0 90px;
+  padding: 0px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -364,3 +366,157 @@ html, body{
   font-weight: 500;
 }
 
+/* =========================
+   📄 PDF 저장 오버레이
+   ========================= */
+#pdf-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;           /* 기본은 숨김 */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#pdf-overlay .pdf-overlay-box {
+  background: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  text-align: center;
+  font-size: 16px;
+}
+
+#pdf-overlay .pdf-overlay-box .sub {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #777;
+}
+
+/* 버튼은 원하는 대로 스타일링 */
+.btn-pdf {
+    display: flex;
+    width: 144px;
+    height: 56px;
+    padding: 9px 36px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* margin: 0 auto; */
+    /* margin-top: 36px; */
+    color: var(--white--color);
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 36px; /* 128.571% */
+    background-color: var(--primary--color);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
+
+/* =========================
+   📄 print 용 스타일(한 번만)
+   ========================= */
+@media print {
+  /* 화면 전용 UI는 숨기기 : 좌우 페이지 버튼 + PDF 버튼 + 오버레이만 */
+  .nav,
+  .page-number,
+  .page-back,
+  .page-next,
+  #btn-export-pdf,
+  #pdf-overlay {
+    display: none !important;
+  }
+
+  /* 네비바(.nav)랑 페이지 번호(.page-number)는 숨기지 않는다!! */
+
+  /* 전체 높이/스크롤 제한 풀기 */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+    .spread-wrapper {
+    margin-top: 0 !important;
+    padding: 0px;
+  }
+
+  .autobio-container {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* 아래에서 만들 print-page 하나당 PDF 1장으로 끊기 */
+  .print-page {
+    page-break-after: always;
+  }
+}
+
+
+/* 화면일 때는 print-header/footer 안 쓰이니 영향 없음 */
+.print-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 34px 0px;
+  border-bottom: 2px solid var(--gray200--color);
+}
+
+.print-header .print-title {
+  color: var(--gray600--color);
+  font-family: NanumBarunGothicOTF;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.56px;
+}
+
+.print-header .print-date {
+  color: var(--gray500--color);
+  font-family: NanumBarunGothicOTF;
+  font-size: 28px;
+}
+
+.print-footer {
+  margin-top: 60px;
+  text-align: center;
+  font-family: NanumBarunGothicOTF;
+  font-size: 32px;
+  font-weight: 800;
+  color: #6ABEFE;
+}
+
+.print-footer.total {
+  color: var(--gray400--color)  
+}
+
+/* PDF 페이지 안에서도 좌우 페이지 영역은 화면이랑 똑같이 유지 */
+.print-page .spread-wrapper {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
+  gap: 68px;
+}
+
+/* 기본 숫자 + 슬래시 색 (#6ABEFE) */
+.page-number {
+  font-size: 32px;        /* 필요 없으면 빼도 됨 */
+  font-weight: 800;
+  color: var(--primary--color);         /* 👉 current + "/" 에 적용될 색 */
+}
+
+/* 전체 페이지 수만 회색으로 오버라이드 */
+.page-number .total {
+  color: var(--gray400--color)         /* 👉 13 같은 총 페이지 수 색 */
+}

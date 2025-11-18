@@ -193,6 +193,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   // 1️⃣ GPT를 통해 자서전 원문 생성
   const interviewData = await generateAutobiographyFromInterviews();
 
+  // 👉 생성된 자서전 내용을 인쇄 페이지에서도 쓰기 위해 저장
+localStorage.setItem("autobio_interviewData", JSON.stringify(interviewData));
+
+
   // 2️⃣ 생성된 내용 없으면 안내문
   if (!interviewData.length) {
     document.querySelector(".autobio-container").innerHTML = `
@@ -392,6 +396,86 @@ function renderSpread() {
 
 
 /********************************************
+ * 📄 PDF 인쇄용 : 헤더 + 스프레드 + 페이지 번호를
+ *                한 덩어리(print-page)로 여러 개 렌더
+ ********************************************/
+function renderAllSpreadsForPrint() {
+  const container = document.querySelector(".autobio-container");
+  if (!container) {
+    console.warn("📄 .autobio-container를 찾지 못했습니다.");
+    return;
+  }
+  if (!spreadData || !spreadData.length) {
+    console.warn("📄 spreadData가 비어 있습니다.");
+    return;
+  }
+
+  // 화면 상단에 이미 있는 자서전 제목/날짜 텍스트 가져오기
+  const titleText = document.getElementById("autobio-title")?.textContent || "";
+  const dateText  = document.getElementById("autobio-date")?.textContent  || "";
+
+  let html = "";
+
+  spreadData.forEach((s, idx) => {
+    if (!s) return;
+
+    const leftHeader = s.leftMeta
+      ? `<div class="content-label">
+           <p>${s.leftMeta.stage}</p>
+           <h1>${s.leftMeta.question}</h1>
+         </div>`
+      : "";
+
+    const rightHeader = s.rightMeta
+      ? `<div class="content-label">
+           <p>${s.rightMeta.stage}</p>
+           <h1>${s.rightMeta.question}</h1>
+         </div>`
+      : "";
+
+    const currentPage = idx + 1;
+    const totalPages  = spreadData.length;
+
+    // 🧩 여기서부터가 "PDF 한 장짜리" 구조
+    html += `
+      <section class="print-page">
+        <!-- ⬆⬆⬆ 이 전체 section 하나가 PDF에서 1장 -->
+
+        <!-- 상단 헤더(원래 네비바와 비슷한 형태) -->
+        <header class="print-header">
+          <h1 class="print-title">${titleText}</h1>
+          <p class="print-date">${dateText}</p>
+        </header>
+
+        <!-- 가운데 내용 : 기존 spread-wrapper 그대로 -->
+        <div class="spread-wrapper">
+          <div class="page page-left">
+            ${leftHeader}
+            <div class="story-text">${s.left || ""}</div>
+          </div>
+          <div class="page page-right">
+            ${rightHeader}
+            <div class="story-text">${s.right || ""}</div>
+          </div>
+        </div>
+
+        <!-- 하단 페이지 번호 -->
+        <footer class="print-footer">
+          <span class="current">${currentPage}</span>
+          /
+          <span class="total">${totalPages}</span>
+        </footer>
+      </section>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+
+
+
+/********************************************
  * 페이지 이동
  ********************************************/
 document.getElementById("btn-page-next").addEventListener("click", () => {
@@ -408,3 +492,54 @@ document.getElementById("btn-page-back").addEventListener("click", () => {
   }
 });
 
+
+/********************************************
+ * PDF 오버레이
+ ********************************************/
+
+function showPdfOverlay() {
+  const ov = document.getElementById("pdf-overlay");
+  if (ov) ov.style.display = "flex";
+}
+
+function hidePdfOverlay() {
+  const ov = document.getElementById("pdf-overlay");
+  if (ov) ov.style.display = "none";
+}
+
+
+/********************************************
+ * PDF 오버레이 + print
+ ********************************************/
+const pdfBtn = document.getElementById("btn-export-pdf");
+
+if (pdfBtn) {
+  // 인쇄가 끝났을 때 화면 원복
+  window.addEventListener("afterprint", () => {
+    console.log("🖨 afterprint 이벤트 - 화면 복구");
+    hidePdfOverlay();
+    document.body.classList.remove("pdf-mode");
+    // 다시 현재 페이지 1 spread만 보이도록
+    renderSpread();
+  });
+
+  pdfBtn.addEventListener("click", () => {
+    console.log("📄 PDF 버튼 클릭! spreadData 길이:", spreadData ? spreadData.length : "없음");
+
+    document.body.classList.add("pdf-mode");
+    showPdfOverlay();
+
+    // ⚠ 이 안에서 에러가 나도 print는 꼭 실행되도록 try/catch
+    try {
+      renderAllSpreadsForPrint();
+    } catch (e) {
+      console.error("❌ renderAllSpreadsForPrint 오류:", e);
+    }
+
+    // DOM이 다시 그려질 시간을 준 뒤 인쇄창 호출
+    setTimeout(() => {
+      console.log("🖨 window.print() 호출");
+      window.print();
+    }, 300);
+  });
+}

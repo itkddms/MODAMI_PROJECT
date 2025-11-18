@@ -87,6 +87,7 @@ html, body{
     z-index: 10;
 }
 
+
 .nav h1{
     position: absolute;
     left: 50%;
@@ -98,6 +99,7 @@ html, body{
     font-weight: 600;
     line-height: 32px;
 }
+
 /* 나중에 내비바 변경시 참고 */
 /* .header {
   display: none;
