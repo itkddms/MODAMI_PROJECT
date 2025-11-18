@@ -155,7 +155,7 @@ html, body{
     height: 504px;
     /* height: calc(100vh - 180px); */
     padding: 0 90px;
-    margin-top: 60px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
     /* align-items: center; */
@@ -198,7 +198,7 @@ html, body{
 
 .page-controller {
     margin: auto;
-    margin-top: 54px;
+    margin-top: 20px;
     width: 480px;
     height: 100px;
     /* position: relative; */
