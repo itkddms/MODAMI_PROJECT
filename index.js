@@ -99,15 +99,26 @@ document.addEventListener('DOMContentLoaded', () => {
  * 전체 초기화
  ******************************************************/
 function resetModamiData() {
+  // 🔹 지우지 않고 유지할 키들
+  const keepKeys = new Set([
+    "OPENAI_API_KEY",  // 지금 사용하는 GPT 키
+    "GOOGLE_TTS_KEY",  // 지금 사용하는 TTS 키
+    "GPT_KEY",         // 예전 코드에서 썼던 이름(있을 수도 있어서)
+    "TTS_KEY"
+  ]);
+
   const removeTargets = [
     "roadmapProgress",
     "selectedStage",
     "autostartNarration",
-    "OPENAI_API_KEY", // 전체 초기화 시 포함
-    "GOOGLE_TTS_KEY",
+    // ❌ 여기에서 OPENAI_API_KEY, GOOGLE_TTS_KEY는 제거!
   ];
 
-  Object.keys(localStorage).forEach(key => {
+  Object.keys(localStorage).forEach((key) => {
+    // 1) 보존 대상이면 건너뛰기
+    if (keepKeys.has(key)) return;
+
+    // 2) 나머지 중에서만 지우기
     if (
       key.startsWith("interview_") ||
       key.startsWith("summary_") ||
@@ -118,9 +129,10 @@ function resetModamiData() {
     }
   });
 
-  alert("모든 데이터가 초기화되었습니다. (API 키 포함)");
+  alert("모든 데이터가 초기화되었습니다. (API 키는 유지됩니다)");
   window.location.href = "index.html";
 }
+
 
 /******************************************************
  * API 키 다시 입력 (선택형 초기화)
