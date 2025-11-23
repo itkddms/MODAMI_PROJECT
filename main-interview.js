@@ -637,15 +637,31 @@ async function loadFollowupQuestions(stageKey = "child") {
           { role: "system", content: "너는 회상을 이끌어내는 한국어 인터뷰어다." },
           {
             role: "user",
-            content: `아래의 사건 요약을 보고 각 사건에 대해 열린형 질문을 한 문장(20자)으로 만들어라.
-존댓말을 사용하고, 평가·지시·추측 표현은 쓰지 않는다.
-출력은 반드시 JSON 객체만 반환하라.
+            content: `
+아래의 사건 요약을 보고 각 사건에 대해 열린형 질문을 한 문장(20~30자)으로 만들어라.
 
-형식:
-{ "byItem": [ { "title": "사건 이름", "question": "질문 문장" } ] }
+[질문 작성 규칙]
+- 예/아니오로 답할 수 없게, 사용자가 자신의 경험을 자유롭게 말할 수 있는 질문으로 쓴다.
+- 존댓말을 사용하고, 평가·지시·충고·추측 표현은 쓰지 않는다.
+- 질문은 사건의 '전체 경험'이나 '전반적인 분위기'를 묻는다.
+- 요약에 나온 특정 장소나 한 장면만 콕 집어 묻지 않는다.
+  (예: "초가집에서..."처럼 너무 좁히지 않는다.)
+- 가능하면 사건 제목에 들어 있는 표현(예: '문경의 작은 마을')을
+  자연스럽게 포함하되, 제목 문장을 그대로 반복하지 않는다.
+- 한 사건당 질문은 딱 한 문장만 쓴다.
+
+[출력 형식]
+반드시 다음 JSON 형식으로만 출력한다.
+{
+  "byItem": [
+    { "title": "사건 이름", "question": "질문 문장" }
+  ]
+}
 
 사건 목록:
-${prompt}`,
+${prompt}
+`.trim(),
+
           },
         ],
         response_format: { type: "json_object" },
@@ -693,9 +709,10 @@ function renderQuestion() {
 
     // 🔹 첫 질문: TTS 끄고(=null) 타닥타닥만
     // 🔹 이후 질문: TTS + 타닥타닥
-    const ttsScript = currentQuestionIdx === 0 ? null : cur.question;
+ const ttsScript = cur.question;   // 첫 질문도 TTS 사용
 
-    typeWriter(questionTextEl, cur.question, ttsScript);
+typeWriter(questionTextEl, cur.question, ttsScript);
+
 
     // === UI 초기화 ===
     recognizing = false;

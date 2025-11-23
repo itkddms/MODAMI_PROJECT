@@ -2,21 +2,15 @@
 
 /* 각 시대별 배경 이미지 */
 
-.history_child_bg {
-    background-image: url('image/1961.svg');
-}
-.history_teen_bg {
-    background-image: url('image/1971.svg');
-}
-.history_adult_bg {
-    background-image: url('image/1988.svg');
-}
-.history_middle_bg {
-    background-image: url('image/2000.svg');
-}
+/* 각 시대별 배경 클래스 (이미지는 JS에서 넣음) */
+.history_child_bg,
+.history_teen_bg,
+.history_adult_bg,
+.history_middle_bg,
 .history_senior_bg {
-    background-image: url('image/2020.svg');
+  /* 배경 이미지는 사용하지 않음 */
 }
+
 
 button {
   border: none;
@@ -119,13 +113,27 @@ button {
   gap: 20px;
 }
 
+
+.chatbox {
+  display: flex;
+  /* 자식 요소들을 유연하게 정렬합니다 */
+  align-items: flex-end;
+  /* 자식 요소를 아래쪽에 정렬합니다 */
+  gap: 20px;
+  /* 텍스트 박스와 버튼 사이의 간격을 설정합니다 */
+}
+
 .textbox {
   position: fixed;
   bottom: 64px;
   left: 50%;
   transform: translateX(-50%);
+
+  /* 텍스트 박스 높이 고정 */
   height: 216px;
   text-align: center;
+  /* 텍스트 가운데 정렬 추가 */
+
   padding: 20px;
   width: calc(100vw - 184px);
   background-color: rgba(255, 255, 255, 0.8);
@@ -133,11 +141,16 @@ button {
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+
+  /* 텍스트를 세로/가로 가운데 정렬 */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* 세로 가운데 정렬 */
   align-items: center;
+  /* 가로 가운데 정렬 */
 }
+
 
 .textbox p {
   font-size: 42px;

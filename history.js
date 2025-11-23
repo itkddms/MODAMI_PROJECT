@@ -65,13 +65,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // 시기별 한 개 자산만 매핑
-    const stagesByPeriod = {
-      CHILD:  { title: meta.CHILD.title,  text: assets[chosen.CHILD]?.text  || '', music: assets[chosen.CHILD]?.music  || '', backgroundClass: meta.CHILD.backgroundClass },
-      TEEN:   { title: meta.TEEN.title,   text: assets[chosen.TEEN]?.text   || '', music: assets[chosen.TEEN]?.music   || '', backgroundClass: meta.TEEN.backgroundClass },
-      ADULT:  { title: meta.ADULT.title,  text: assets[chosen.ADULT]?.text  || '', music: assets[chosen.ADULT]?.music  || '', backgroundClass: meta.ADULT.backgroundClass },
-      MIDDLE: { title: meta.MIDDLE.title, text: assets[chosen.MIDDLE]?.text || '', music: assets[chosen.MIDDLE]?.music || '', backgroundClass: meta.MIDDLE.backgroundClass },
-      SENIOR: { title: meta.SENIOR.title, text: assets[chosen.SENIOR]?.text || '', music: assets[chosen.SENIOR]?.music || '', backgroundClass: meta.SENIOR.backgroundClass },
-    };
+  const stagesByPeriod = {
+  CHILD:  {
+    title: meta.CHILD.title,
+    text:  assets[chosen.CHILD]?.text  || '',
+    music: assets[chosen.CHILD]?.music || '',
+    image: assets[chosen.CHILD]?.image || '',
+    backgroundClass: meta.CHILD.backgroundClass
+  },
+  TEEN:   {
+    title: meta.TEEN.title,
+    text:  assets[chosen.TEEN]?.text   || '',
+    music: assets[chosen.TEEN]?.music  || '',
+    image: assets[chosen.TEEN]?.image  || '',
+    backgroundClass: meta.TEEN.backgroundClass
+  },
+  ADULT:  {
+    title: meta.ADULT.title,
+    text:  assets[chosen.ADULT]?.text  || '',
+    music: assets[chosen.ADULT]?.music || '',
+    image: assets[chosen.ADULT]?.image || '',
+    backgroundClass: meta.ADULT.backgroundClass
+  },
+  MIDDLE: {
+    title: meta.MIDDLE.title,
+    text:  assets[chosen.MIDDLE]?.text || '',
+    music: assets[chosen.MIDDLE]?.music || '',
+    image: assets[chosen.MIDDLE]?.image || '',
+    backgroundClass: meta.MIDDLE.backgroundClass
+  },
+  SENIOR: {
+    title: meta.SENIOR.title,
+    text:  assets[chosen.SENIOR]?.text || '',
+    music: assets[chosen.SENIOR]?.music || '',
+    image: assets[chosen.SENIOR]?.image || '',
+    backgroundClass: meta.SENIOR.backgroundClass
+  },
+};
+
 
     // 2) 기존 그룹/내비 로직 그대로
     const urlParams  = new URLSearchParams(window.location.search);
@@ -97,12 +128,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     function playStage(periodKey) {
       const s = stagesByPeriod[periodKey];
       if (!s) return;
-      pageTitleEl.textContent = s.title;
-      narrationText.textContent = s.text;
-      narrationAudio.src = s.music;
 
+      pageTitleEl.textContent   = s.title;
+      narrationText.textContent = s.text;
+      narrationAudio.src        = s.music;
+
+      // 시기별 스타일용 클래스는 유지
       backgroundContainer.className = '';
-      backgroundContainer.classList.add(s.backgroundClass);
+      if (s.backgroundClass) {
+        backgroundContainer.classList.add(s.backgroundClass);
+      }
+
+      // 🔥 JSON에서 가져온 이미지 실제로 적용
+      if (s.image) {
+        backgroundContainer.style.backgroundImage = `url(${s.image})`;
+      } else {
+        backgroundContainer.style.backgroundImage = 'none';
+      }
 
       narrationAudio.play().catch(e => console.warn('자동재생 차단:', e));
     }

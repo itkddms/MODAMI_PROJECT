@@ -397,7 +397,7 @@ html, body{
 /* 버튼은 원하는 대로 스타일링 */
 .btn-pdf {
     display: flex;
-    width: 144px;
+    width: 220px;
     height: 56px;
     padding: 9px 36px;
     flex-direction: column;

@@ -99,37 +99,22 @@ document.addEventListener('DOMContentLoaded', () => {
  * 전체 초기화
  ******************************************************/
 function resetModamiData() {
-  // 🔹 지우지 않고 유지할 키들
+  // 🔹 남겨둘 키들(= API 키들)
   const keepKeys = new Set([
-    "OPENAI_API_KEY",  // 지금 사용하는 GPT 키
-    "GOOGLE_TTS_KEY",  // 지금 사용하는 TTS 키
-    "GPT_KEY",         // 예전 코드에서 썼던 이름(있을 수도 있어서)
+    "OPENAI_API_KEY",
+    "GOOGLE_TTS_KEY",
+    "GPT_KEY",
     "TTS_KEY"
   ]);
 
-  const removeTargets = [
-    "roadmapProgress",
-    "selectedStage",
-    "autostartNarration",
-    // ❌ 여기에서 OPENAI_API_KEY, GOOGLE_TTS_KEY는 제거!
-  ];
-
+  // 🔹 localStorage 전체 순회하면서, 보존 키를 제외하고 전부 삭제
   Object.keys(localStorage).forEach((key) => {
-    // 1) 보존 대상이면 건너뛰기
-    if (keepKeys.has(key)) return;
-
-    // 2) 나머지 중에서만 지우기
-    if (
-      key.startsWith("interview_") ||
-      key.startsWith("summary_") ||
-      key.startsWith("stageStatus_") ||
-      removeTargets.includes(key)
-    ) {
+    if (!keepKeys.has(key)) {
       localStorage.removeItem(key);
     }
   });
 
-  alert("모든 데이터가 초기화되었습니다. (API 키는 유지됩니다)");
+  alert("API 키를 제외한 모든 데이터가 초기화되었습니다.");
   window.location.href = "index.html";
 }
 

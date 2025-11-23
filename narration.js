@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const templatesByStep = {
     1: [
-      { displayText: `${gender} 저는 AI 손자 '담이'에요! 만나서 반가워요.`, tts: `${gender} 저는 에이아이 손자 담이예요! 만나서 반가워요.` },
+      { displayText: `${gender} 저는 AI 손녀 '담이'에요! 만나서 반가워요.`, tts: `${gender} 저는 에이아이 손녀 담이예요! 만나서 반가워요.` },
       { displayText: `오늘부터 저와 총 5번의 단계를 통해 ${gender}의 <br> 이야기를 담은 자서전을 만들어 볼 거예요.`, tts: `오늘부터 저와 총 다섯 번의 단계를 통해 ${gender}의 이야기를 담은 자서전을 만들어볼 거예요.` },
       { displayText: `기억들을 회고하기 전에 담이가 ${gender}의 <br>유아기, 청소년기 시절의 사진과 노래를 들려드릴게요.`, tts: `기억들을 회고하기 전에 담이가 ${gender}의 유아기와 청소년기 시절의 사진과 노래를 들려드릴게요.`, next: "history.html?group=childteen&returnStep=2" }
     ],

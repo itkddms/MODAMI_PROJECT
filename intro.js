@@ -20,12 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 키워드 기반으로 제목을 생성하는 함수
     const generateTitleFromText = (text) => {
         const keywords = {
-            '행복': '나의 행복한 시절',
-            '사랑': '사랑을 담은 이야기',
-            '도전': '도전으로 가득찬 나의 삶',
-            '인생': '나의 특별한 인생 이야기',
-            '추억': '소중한 추억들',
-            '청춘': '눈부셨던 나의 청춘'
+            '괴릭': '나의 행복한 시절',
         };
 
         for (const keyword in keywords) {

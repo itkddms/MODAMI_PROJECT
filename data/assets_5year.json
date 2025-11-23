@@ -6,7 +6,7 @@
   },
   "1955": {
     "music": "sound/1955.mp3",
-    "image": "image/1955_bg.svg",
+    "image": "image/1955.svg",
     "text": "BGM - 노란 샤쓰의 사나이 (1961) / 한명숙"
   },
   "1960": {
@@ -20,7 +20,7 @@
     "text": "BGM - 아침이슬 (1971) / 김민기"
   },
   "1970": {
-    "music": "sound/1971.mp3",
+    "music": "sound/1970.mp3",
     "image": "image/1970.svg",
     "text": "BGM - 미인 (1974) / 신중현과 엽전들의 미인"
   },
