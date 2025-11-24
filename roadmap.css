@@ -152,12 +152,12 @@ header {
 }
 
 .road::-webkit-scrollbar-thumb {
-  background-color: #BCE1FC; /* 스크롤바 색 */
+  background-color: none;
   border-radius: 10px;
 }
 
 .road::-webkit-scrollbar-thumb:hover {
-  background-color: #6ABEFE; /* hover 시 강조색 */
+  background-color: none; /* hover 시 강조색 */
 }
 
 .step {
